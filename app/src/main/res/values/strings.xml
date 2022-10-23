@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Onitama AI</string>
+    <string name="created_by">
+        CREATED BY :\n\n
+        Alexander Kevin 220116902\n
+        Ignatius Odi 220116919\n
+        Kenny 220116925\n\n
+        AI PROJECT - ISTTS
+    </string>
 </resources>
