@@ -3,6 +3,7 @@ package com.cbengineer.onitamaai
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        coba()
+
         btVsPlayer = findViewById(R.id.btVsPlayer)
         btVsAI = findViewById(R.id.btVsAI)
         
@@ -24,6 +27,14 @@ class MainActivity : AppCompatActivity() {
         
         btVsAI.setOnClickListener {
             Toast.makeText(this, "COMING SOON", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun coba() {
+        val listCard = Card.getAllCard()
+        for (card in listCard) {
+            Card.visualisasiCard(card)
+            Log.d("ONITAMA", "==============")
         }
     }
 }
