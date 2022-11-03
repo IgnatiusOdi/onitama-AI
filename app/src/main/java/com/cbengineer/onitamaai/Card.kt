@@ -1,12 +1,23 @@
 package com.cbengineer.onitamaai
 
 import android.util.Log
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 class Card (
     val nama: String,
     val listPoint: List<Point>
 ) {
+    fun getMoves(from: Point): ArrayList<Point> {
+        val points = arrayListOf<Point>()
+        for (move in listPoint) {
+            points.add(Point(from.x + move.x, from.y + move.y))
+        }
+        return points
+    }
+
     companion object {
+        val deck = getAllCard()
         fun visualisasiCard(card: Card) {
             val board = arrayOf(
                 arrayOf("-", "-", "-", "-", "-"),
@@ -29,9 +40,13 @@ class Card (
                 Log.d("ONITAMA", string)
             }
         }
+
+        fun randomCardFromDeck(): Card {
+            return deck.removeAt(Random.nextInt(0..deck.size-1))
+        }
         
-        fun getAllCard(): List<Card> {
-            return listOf<Card>(
+        fun getAllCard(): ArrayList<Card> {
+            return arrayListOf<Card>(
                 Card(
                     "Tiger",
                     listOf<Point>(
