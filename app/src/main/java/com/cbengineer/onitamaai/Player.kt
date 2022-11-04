@@ -1,18 +1,17 @@
 package com.cbengineer.onitamaai
 
 class Player (
-    nama: String,
-    order: Int,
+    val nama: String,
+    val order: Int,
 ) {
     lateinit var cards: ArrayList<Card>
-//    lateinit var
-    //tambahkan cara agar player bisa diidentifikasi
-    //player satu atau player dua?
-    //untuk pembeda card nya
-    //karena card di palyer dua itu di balik 180 derajat
     init {
         cards.add(Card.randomCardFromDeck())
         cards.add(Card.randomCardFromDeck())
+    }
 
+    companion object {
+        val ORDER_PLAYER1 = 1
+        val ORDER_PLAYER2 = 2
     }
 }

@@ -1,6 +1,6 @@
 package com.cbengineer.onitamaai
 
 class Piece (
-    val role: String, // "pawn" atau "king"
+    val role: String, // "PAWN" atau "KING"
     val player: Player,
 )

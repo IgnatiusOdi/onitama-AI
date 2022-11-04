@@ -6,8 +6,6 @@ class GameEngine(
     player2: Player,
 ) {
     public val board = createBoard(player1, player2)
-    private val PLAYER1_BASE: Point = Point(BOARD_SIZE/2, BOARD_SIZE-1)
-    private val PLAYER2_BASE: Point = Point(BOARD_SIZE/2, 0)
 
     //player = player yang gerak
     //card = card yang dipake
@@ -28,47 +26,76 @@ class GameEngine(
         return validMoves
     }
 
+    /**
+     * Card yang dipakai akan diremove dari hand player, dan dimasukkan ke dalam deck global
+     * @param from titik asal
+     * @param to titik tujuan
+     * @param player player yang melakukan move
+     * @param card card yang digunakan
+     */
     fun move(from: Point, to: Point, player: Player, card: Card) {
         board[to.y][to.x] = board[from.y][from.x]
-        Card.deck.add(card)
+        Card.deck.add(
+            player.cards.removeAt(
+                player.cards.indexOf(card)
+            )
+        )
     }
 
+    /**
+     *
+     */
     fun checkIfWin(player: Player): Boolean {
+        // cek apakah king musuh sudah mati
         var isEnemyKingDead = true
         for (row: Array<Piece?> in board) {
             for (col: Piece? in row) {
-                if (col != null && col.role == "king" && col.player != player) {
+                if (col != null && col.role == "KING" && col.player != player) {
                     isEnemyKingDead = false
                 }
             }
         }
-        //cek Player.kt
-        //butuh cara untuk identifikasi player itu player satu atau dua
-        var isEnemyBaseTaken = true
+        // cek apakah piece yang ada di base musuh itu KING dan bukan milik player saat ini
+        val basePoint = getEnemyBasePoint(player)
+        val pieceAtBaseEnemyPlayer: Piece? = board[basePoint.y][basePoint.x]
+        var isEnemyBaseTaken = pieceAtBaseEnemyPlayer != null &&
+                pieceAtBaseEnemyPlayer.player != player &&
+                pieceAtBaseEnemyPlayer.role == "KING"
         return isEnemyKingDead || isEnemyBaseTaken
     }
 
     companion object {
+        val PLAYER1_BASE: Point = Point(BOARD_SIZE/2, BOARD_SIZE-1)
+        val PLAYER2_BASE: Point = Point(BOARD_SIZE/2, 0)
+
+        fun getEnemyBasePoint(player: Player) : Point {
+            return when (player.order) {
+                Player.ORDER_PLAYER1 -> PLAYER2_BASE
+                Player.ORDER_PLAYER2 -> PLAYER1_BASE
+                else -> Point(-1, -1)
+            }
+        }
+
         fun createBoard(player1 : Player, player2: Player) : Array<Array<Piece?>> {
             return arrayOf<Array<Piece?>>(
                 //first row, player 2
                 arrayOf<Piece?>(
-                    Piece("pawn", player2),
-                    Piece("pawn", player2),
-                    Piece("king", player2),
-                    Piece("pawn", player2),
-                    Piece("pawn", player2)
+                    Piece("PAWN", player2),
+                    Piece("PAWN", player2),
+                    Piece("KING", player2),
+                    Piece("PAWN", player2),
+                    Piece("PAWN", player2)
                 ),
                 arrayOfNulls(5),
                 arrayOfNulls(5),
                 arrayOfNulls(5),
                 //last row, player 1
                 arrayOf<Piece?>(
-                    Piece("pawn", player1),
-                    Piece("pawn", player1),
-                    Piece("king", player1),
-                    Piece("pawn", player1),
-                    Piece("pawn", player1)
+                    Piece("PAWN", player1),
+                    Piece("PAWN", player1),
+                    Piece("KING", player1),
+                    Piece("PAWN", player1),
+                    Piece("PAWN", player1)
                 ),
             )
         }
