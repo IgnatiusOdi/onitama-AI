@@ -6,13 +6,14 @@ class GameEngine(
     player2: Player,
 ) {
     public val board = createBoard(player1, player2)
+    public var turn = 1;
 
     //player = player yang gerak
     //card = card yang dipake
     //from = titik saat ini
     fun getValidMoves(from: Point, player: Player, card: Card): ArrayList<Point> {
         val validMoves = arrayListOf<Point>()
-        val moves = card.getMoves(from)
+        val moves = card.getMoves(from, player)
 
         for (move in moves) {
             if (move.x < 0 || move.x >= BOARD_SIZE || move.y < 0 || move.y >= BOARD_SIZE) continue

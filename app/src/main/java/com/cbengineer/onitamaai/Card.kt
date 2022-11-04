@@ -8,10 +8,11 @@ class Card (
     val nama: String,
     val listPoint: List<Point>
 ) {
-    fun getMoves(from: Point): ArrayList<Point> {
+    fun getMoves(from: Point, player: Player): ArrayList<Point> {
         val points = arrayListOf<Point>()
         for (move in listPoint) {
-            points.add(Point(from.x + move.x, from.y + move.y))
+            if (player.order == Player.ORDER_PLAYER1) points.add(Point(from.x + move.x, from.y + move.y))
+            else points.add(Point((from.x + move.x) * -1, (from.y + move.y) * -1))
         }
         return points
     }

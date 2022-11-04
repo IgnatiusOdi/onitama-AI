@@ -87,41 +87,50 @@
                 android:id="@+id/tile01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile02"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile03"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile04"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
+                android:background="@drawable/tile_default"
                 android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:layout_marginBottom="-1dp" />
 
             <ImageButton
                 android:id="@+id/tile05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
         </TableRow>
 
         <TableRow
@@ -133,41 +142,50 @@
                 android:id="@+id/tile06"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile07"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile08"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile09"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
         </TableRow>
 
         <TableRow
@@ -179,41 +197,50 @@
                 android:id="@+id/tile11"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile12"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile13"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile14"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile15"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
         </TableRow>
 
         <TableRow
@@ -225,41 +252,50 @@
                 android:id="@+id/tile16"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile17"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile18"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile19"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
         </TableRow>
 
         <TableRow
@@ -271,41 +307,45 @@
                 android:id="@+id/tile21"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile22"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile23"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile24"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
 
             <ImageButton
                 android:id="@+id/tile25"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scaleType="center"
-                app:srcCompat="@drawable/white" />
+                android:background="@drawable/tile_default"
+                android:scaleType="center" />
         </TableRow>
     </TableLayout>
 
