@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="NEXT CARD\nBOAR"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
         <Space
@@ -43,6 +44,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="PLAYER 2"
+        android:textColor="@color/black"
         android:textSize="24sp" />
 
     <LinearLayout
@@ -52,18 +54,6 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/movePlayer2_1"
-            android:layout_width="160dp"
-            android:layout_height="100dp"
-            android:background="#00000000"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/cobra" />
-
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="match_parent" />
-
-        <ImageButton
             android:id="@+id/movePlayer2_2"
             android:layout_width="160dp"
             android:layout_height="100dp"
@@ -71,12 +61,25 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/crab" />
 
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/movePlayer2_1"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:background="#00000000"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/cobra" />
+
     </LinearLayout>
 
     <TableLayout
-        android:layout_width="290dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginVertical="5dp">
 
         <TableRow
             android:layout_width="wrap_content"
@@ -86,216 +89,226 @@
             <ImageButton
                 android:id="@+id/tile01"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/purplepawn"
+                android:tag="@string/purplepawn" />
 
             <ImageButton
                 android:id="@+id/tile02"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/purplepawn"
+                android:tag="@string/purplepawn" />
 
             <ImageButton
                 android:id="@+id/tile03"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/purpleking"
+                android:tag="@string/purpleking" />
 
             <ImageButton
                 android:id="@+id/tile04"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/purplepawn"
+                android:tag="@string/purplepawn" />
 
             <ImageButton
                 android:id="@+id/tile05"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/purplepawn"
+                android:tag="@string/purplepawn" />
         </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/tile06"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile07"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile08"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile09"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile10"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/tile11"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile12"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile13"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile14"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile15"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
         </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/tile16"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile17"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile18"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile19"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@+id/tile20"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter" />
         </TableRow>
 
         <TableRow
@@ -307,47 +320,56 @@
             <ImageButton
                 android:id="@+id/tile21"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
                 android:scaleType="fitCenter"
-                android:src="@drawable/redpawn" />
+                android:src="@drawable/redpawn"
+                android:tag="@string/redpawn" />
 
             <ImageButton
                 android:id="@+id/tile22"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/redpawn"
+                android:tag="@string/redpawn" />
 
             <ImageButton
                 android:id="@+id/tile23"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/redking"
+                android:tag="@string/redking" />
 
             <ImageButton
                 android:id="@+id/tile24"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_marginEnd="-1dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/redpawn"
+                android:tag="@string/redpawn" />
 
             <ImageButton
                 android:id="@+id/tile25"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:background="@drawable/tile_default"
-                android:scaleType="center" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/redpawn"
+                android:tag="@string/redpawn" />
         </TableRow>
     </TableLayout>
 
@@ -385,6 +407,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="PLAYER 1"
+        android:textColor="@color/black"
         android:textSize="24sp" />
 
 </LinearLayout>

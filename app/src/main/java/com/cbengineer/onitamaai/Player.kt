@@ -4,7 +4,7 @@ class Player (
     val nama: String,
     val order: Int,
 ) {
-    lateinit var cards: ArrayList<Card>
+    var cards: ArrayList<Card> = ArrayList()
     init {
         cards.add(Card.randomCardFromDeck())
         cards.add(Card.randomCardFromDeck())

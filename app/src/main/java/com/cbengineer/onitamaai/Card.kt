@@ -18,7 +18,7 @@ class Card (
     }
 
     companion object {
-        val deck = getAllCard()
+        var deck = getAllCard()
         fun visualisasiCard(card: Card) {
             val board = arrayOf(
                 arrayOf("-", "-", "-", "-", "-"),
@@ -43,7 +43,7 @@ class Card (
         }
 
         fun randomCardFromDeck(): Card {
-            return deck.removeAt(Random.nextInt(0..deck.size-1))
+            return deck.removeAt(Random.nextInt(0 until deck.size))
         }
         
         fun getAllCard(): ArrayList<Card> {
