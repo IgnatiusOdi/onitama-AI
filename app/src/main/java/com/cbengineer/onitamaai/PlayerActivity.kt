@@ -71,11 +71,16 @@ class PlayerActivity : AppCompatActivity() {
         changeCard(moveNext, nextCard.nama)
         tvNextCard.text = "NEXT CARD\n${moveNext.tag.toString().uppercase()}"
 
-        tiles.forEach { tile ->
-            tile.forEach {
-                it.setOnClickListener {
-                    if (it.tag != null) {
-                        Toast.makeText(this, it.tag.toString(), Toast.LENGTH_SHORT).show()
+        // TODO
+        // KURANG PENGECEKAN TURN PLAYER SIAPA,
+
+        for (i in 0 until tiles.size) {
+            for (j in 0 until tiles[i].size) {
+                tiles[i][j].tag = game.board[i][j]
+                tiles[i][j].setOnClickListener {
+                    if (game.board[i][j] != null) {
+                        val piece = game.board[i][j]
+                        game.getValidMoves(Point(i, j), piece.player, cardSelected)
                     }
                 }
             }
