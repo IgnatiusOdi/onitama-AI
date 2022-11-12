@@ -19,7 +19,7 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var movePlayer2_2: ImageButton
     var tiles: Array<Array<ImageButton>> = arrayOf()
 
-    lateinit var nextCard: Card
+//    lateinit var nextCard: Card
     lateinit var player1: Player
     lateinit var player2: Player
     lateinit var game: GameEngine
@@ -52,7 +52,6 @@ class PlayerActivity : AppCompatActivity() {
 
         player1 = Player("PLAYER 1", Player.ORDER_PLAYER1)
         player2 = Player("PLAYER 2", Player.ORDER_PLAYER2)
-        nextCard = Card.randomCardFromDeck()
         game = GameEngine(player1, player2)
 
         // PLAYER 1 CARD
@@ -68,11 +67,9 @@ class PlayerActivity : AppCompatActivity() {
         movePlayer2_2.rotation = 180f
 
         // NEXT CARD
-        changeCard(moveNext, nextCard.nama)
+        changeCard(moveNext, game.nextCard.nama)
         tvNextCard.text = "NEXT CARD\n${moveNext.tag.toString().uppercase()}"
 
-        // TODO
-        // KURANG PENGECEKAN TURN PLAYER SIAPA,
 
         for (i in 0 until tiles.size) {
             for (j in 0 until tiles[i].size) {
@@ -80,7 +77,9 @@ class PlayerActivity : AppCompatActivity() {
                 tiles[i][j].setOnClickListener {
                     if (game.board[i][j] != null) {
                         val piece = game.board[i][j]
-                        game.getValidMoves(Point(i, j), piece.player, cardSelected)
+                        piece?.let {
+                            game.getValidMoves(Point(i, j), it.player, cardSelected)
+                        }
                     }
                 }
             }

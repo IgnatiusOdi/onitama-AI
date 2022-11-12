@@ -2,15 +2,47 @@ package com.cbengineer.onitamaai
 const val BOARD_SIZE = 5
 
 class GameEngine(
-    player1: Player,
-    player2: Player,
+    val player1: Player,
+    val player2: Player,
 ) {
-    public val board = createBoard(player1, player2)
-    public var turn = 1;
+    val board = createBoard(player1, player2)
+    var nextCard = Card.randomCardFromDeck()
+    var turn = 1
 
-    //player = player yang gerak
-    //card = card yang dipake
-    //from = titik saat ini
+    /**
+     * turn++
+     */
+    fun endTurn() {
+        turn++
+    }
+
+    /**
+     * @return player1 jika turn ganjil, player2 jika turn genap
+     */
+    fun getPlayerBasedOnTurn(): Player {
+        return when (turn % 2) {
+            1 -> player1
+            else -> player2
+        }
+    }
+
+    /**
+     * deck card player ditambah next card dan merandom nextCard dari deck
+     * @param player card akan dimasukkan dalam deck player ini
+     */
+    fun putNextCardToPlayer(player: Player) {
+        player.cards.add(
+            nextCard
+        )
+        nextCard = Card.randomCardFromDeck()
+    }
+
+    /**
+     * @param from titik asal
+     * @param player player yang melakukan move
+     * @param card card yang digunakan
+     * @return list semua move yang bisa dilakukan
+     */
     fun getValidMoves(from: Point, player: Player, card: Card): ArrayList<Point> {
         val validMoves = arrayListOf<Point>()
         val moves = card.getMoves(from, player)
@@ -29,6 +61,7 @@ class GameEngine(
 
     /**
      * Card yang dipakai akan diremove dari hand player, dan dimasukkan ke dalam deck global
+     * dan memanggil function [putNextCardToPlayer]
      * @param from titik asal
      * @param to titik tujuan
      * @param player player yang melakukan move
@@ -41,10 +74,12 @@ class GameEngine(
                 player.cards.indexOf(card)
             )
         )
+        putNextCardToPlayer(player)
     }
 
     /**
-     *
+     * @param player player sekarang
+     * @return true jika player menang, false jika tidak
      */
     fun checkIfWin(player: Player): Boolean {
         // cek apakah king musuh sudah mati
