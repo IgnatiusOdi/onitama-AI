@@ -8,6 +8,10 @@ class Card (
     val nama: String,
     val listPoint: List<Point>
 ) {
+    override fun toString(): String {
+        return nama
+    }
+
     fun getMoves(from: Point, player: Player): ArrayList<Point> {
         val points = arrayListOf<Point>()
         for (move in listPoint) {

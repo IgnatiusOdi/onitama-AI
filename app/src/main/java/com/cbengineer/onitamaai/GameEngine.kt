@@ -34,7 +34,7 @@ class GameEngine(
         player.cards.add(
             nextCard
         )
-        nextCard = Card.randomCardFromDeck()
+//        nextCard = Card.randomCardFromDeck()
     }
 
     /**
@@ -69,11 +69,11 @@ class GameEngine(
      */
     fun move(from: Point, to: Point, player: Player, card: Card) {
         board[to.y][to.x] = board[from.y][from.x]
-        Card.deck.add(
-            player.cards.removeAt(
-                player.cards.indexOf(card)
-            )
-        )
+//        Card.deck.add(
+//            player.cards.removeAt(
+//                player.cards.indexOf(card)
+//            )
+//        )
         putNextCardToPlayer(player)
     }
 

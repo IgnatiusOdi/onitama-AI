@@ -19,12 +19,14 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var movePlayer2_2: ImageButton
     var tiles: Array<Array<ImageButton>> = arrayOf()
 
-//    lateinit var nextCard: Card
+    lateinit var nextCard: Card
     lateinit var player1: Player
     lateinit var player2: Player
     lateinit var game: GameEngine
 
-    lateinit var cardSelected: Card
+    private var cardSelected: Card? = null
+    private var tileSelected: Point? = null
+    private var ibSelected: ImageButton? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +69,9 @@ class PlayerActivity : AppCompatActivity() {
         movePlayer2_2.rotation = 180f
 
         // NEXT CARD
-        changeCard(moveNext, game.nextCard.nama)
+        nextCard = game.nextCard
+        changeCard(moveNext, nextCard.nama)
         tvNextCard.text = "NEXT CARD\n${moveNext.tag.toString().uppercase()}"
-
 
         for (i in 0 until tiles.size) {
             for (j in 0 until tiles[i].size) {
@@ -77,8 +79,11 @@ class PlayerActivity : AppCompatActivity() {
                 tiles[i][j].setOnClickListener {
                     if (game.board[i][j] != null) {
                         val piece = game.board[i][j]
-                        piece?.let {
-                            game.getValidMoves(Point(i, j), it.player, cardSelected)
+                        if (game.board[i][j]!!.player == game.getPlayerBasedOnTurn()) {
+                            piece?.let {
+                                changeTileSelected(Point(j, i))
+                                println(cardSelected)
+                            }
                         }
                     }
                 }
@@ -88,20 +93,75 @@ class PlayerActivity : AppCompatActivity() {
         movePlayer1_1.setOnClickListener {
             if (game.turn == 1) {
                 cardSelected = player1.cards[0]
-                println(game.getValidMoves(Point(cardSelected.listPoint[0].x, cardSelected.listPoint[0].y), player1, cardSelected))
+                ibSelected = movePlayer1_1
+                Toast.makeText(this, player1.cards[0].nama, Toast.LENGTH_SHORT).show()
             }
         }
 
         movePlayer1_2.setOnClickListener {
-            Toast.makeText(this, it.tag.toString(), Toast.LENGTH_SHORT).show()
+            if (game.turn == 1) {
+                cardSelected = player1.cards[1]
+                ibSelected = movePlayer1_2
+                Toast.makeText(this, player1.cards[1].nama, Toast.LENGTH_SHORT).show()
+            }
         }
 
         movePlayer2_1.setOnClickListener {
-            Toast.makeText(this, it.tag.toString(), Toast.LENGTH_SHORT).show()
+            if (game.turn == 2) {
+                cardSelected = player2.cards[0]
+                ibSelected = movePlayer2_1
+                Toast.makeText(this, player2.cards[0].nama, Toast.LENGTH_SHORT).show()
+            }
         }
 
         movePlayer2_2.setOnClickListener {
-            Toast.makeText(this, it.tag.toString(), Toast.LENGTH_SHORT).show()
+            if (game.turn == 2) {
+                cardSelected = player2.cards[1]
+                ibSelected = movePlayer2_2
+                Toast.makeText(this, player2.cards[1].nama, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun resetTile() {
+        if (tileSelected != null) {
+            val listPoint = game.getValidMoves(tileSelected!!, game.getPlayerBasedOnTurn(), cardSelected!!)
+            for (p in listPoint) {
+                tiles[p.y][p.x].setBackgroundResource(R.drawable.tile_default)
+                tiles[p.y][p.x].setOnClickListener(null)
+            }
+        }
+    }
+
+    fun changeTileSelected(point: Point) {
+        resetTile()
+        tileSelected = point
+        val listPoint =
+            cardSelected?.let {
+                game.getValidMoves(tileSelected!!, game.getPlayerBasedOnTurn(),
+                    it
+                )
+            }
+        if (listPoint != null) {
+            for (p in listPoint) {
+                tiles[p.y][p.x].setBackgroundColor(resources.getColor(R.color.red))
+                tiles[p.y][p.x].setOnClickListener {
+                    resetTile()
+                    tileSelected?.let { it1 -> cardSelected?.let { it2 ->
+                        game.move(it1, Point(p.y, p.x), game.getPlayerBasedOnTurn(),
+                            it2
+                        )
+                        val temp = cardSelected
+                        changeCard(ibSelected!!, moveNext.tag.toString())
+                        val indexCard = player1.cards.indexOf(cardSelected)
+                        player1.cards.remove(cardSelected)
+                        player1.cards.add(indexCard, nextCard)
+                        changeCard(moveNext, temp!!.nama)
+                        nextCard = temp
+//                        game.endTurn()
+                    } }
+                }
+            }
         }
     }
 
