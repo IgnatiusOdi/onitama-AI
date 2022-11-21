@@ -86,7 +86,7 @@ class GameEngine(
         var isEnemyKingDead = true
         for (row: Array<Piece?> in board) {
             for (col: Piece? in row) {
-                if (col != null && col.role == "KING" && col.player != player) {
+                if (col != null && col.role == Piece.PieceRole.KING && col.player != player) {
                     isEnemyKingDead = false
                 }
             }
@@ -96,7 +96,7 @@ class GameEngine(
         val pieceAtBaseEnemyPlayer: Piece? = board[basePoint.y][basePoint.x]
         var isEnemyBaseTaken = pieceAtBaseEnemyPlayer != null &&
                 pieceAtBaseEnemyPlayer.player != player &&
-                pieceAtBaseEnemyPlayer.role == "KING"
+                pieceAtBaseEnemyPlayer.role == Piece.PieceRole.KING
         return isEnemyKingDead || isEnemyBaseTaken
     }
 
@@ -116,22 +116,22 @@ class GameEngine(
             return arrayOf<Array<Piece?>>(
                 //first row, player 2
                 arrayOf<Piece?>(
-                    Piece("PAWN", player2),
-                    Piece("PAWN", player2),
-                    Piece("KING", player2),
-                    Piece("PAWN", player2),
-                    Piece("PAWN", player2)
+                    Piece(Piece.PieceRole.PAWN, player2),
+                    Piece(Piece.PieceRole.PAWN, player2),
+                    Piece(Piece.PieceRole.KING, player2),
+                    Piece(Piece.PieceRole.PAWN, player2),
+                    Piece(Piece.PieceRole.PAWN, player2)
                 ),
                 arrayOfNulls(5),
                 arrayOfNulls(5),
                 arrayOfNulls(5),
                 //last row, player 1
                 arrayOf<Piece?>(
-                    Piece("PAWN", player1),
-                    Piece("PAWN", player1),
-                    Piece("KING", player1),
-                    Piece("PAWN", player1),
-                    Piece("PAWN", player1)
+                    Piece(Piece.PieceRole.PAWN, player1),
+                    Piece(Piece.PieceRole.PAWN, player1),
+                    Piece(Piece.PieceRole.KING, player1),
+                    Piece(Piece.PieceRole.PAWN, player1),
+                    Piece(Piece.PieceRole.PAWN, player1)
                 ),
             )
         }

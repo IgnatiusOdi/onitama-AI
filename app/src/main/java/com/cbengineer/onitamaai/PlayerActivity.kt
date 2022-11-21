@@ -80,9 +80,13 @@ class PlayerActivity : AppCompatActivity() {
                     if (game.board[i][j] != null) {
                         val piece = game.board[i][j]
                         if (game.board[i][j]!!.player == game.getPlayerBasedOnTurn()) {
-                            piece?.let {
-                                changeTileSelected(Point(j, i))
-                                println(cardSelected)
+                            if (cardSelected != null) { // card null check
+                                piece?.let {
+                                    changeTileSelected(Point(j, i))
+                                    println(cardSelected)
+                                }
+                            } else {
+                                Toast.makeText(this, "Select a card", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -92,6 +96,7 @@ class PlayerActivity : AppCompatActivity() {
 
         movePlayer1_1.setOnClickListener {
             if (game.turn == 1) {
+                resetTile()
                 cardSelected = player1.cards[0]
                 ibSelected = movePlayer1_1
                 Toast.makeText(this, player1.cards[0].nama, Toast.LENGTH_SHORT).show()
@@ -100,6 +105,7 @@ class PlayerActivity : AppCompatActivity() {
 
         movePlayer1_2.setOnClickListener {
             if (game.turn == 1) {
+                resetTile()
                 cardSelected = player1.cards[1]
                 ibSelected = movePlayer1_2
                 Toast.makeText(this, player1.cards[1].nama, Toast.LENGTH_SHORT).show()
@@ -108,6 +114,7 @@ class PlayerActivity : AppCompatActivity() {
 
         movePlayer2_1.setOnClickListener {
             if (game.turn == 2) {
+                resetTile()
                 cardSelected = player2.cards[0]
                 ibSelected = movePlayer2_1
                 Toast.makeText(this, player2.cards[0].nama, Toast.LENGTH_SHORT).show()
@@ -116,6 +123,7 @@ class PlayerActivity : AppCompatActivity() {
 
         movePlayer2_2.setOnClickListener {
             if (game.turn == 2) {
+                resetTile()
                 cardSelected = player2.cards[1]
                 ibSelected = movePlayer2_2
                 Toast.makeText(this, player2.cards[1].nama, Toast.LENGTH_SHORT).show()
@@ -124,7 +132,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun resetTile() {
-        if (tileSelected != null) {
+        if (tileSelected != null && cardSelected != null) {
             val listPoint = game.getValidMoves(tileSelected!!, game.getPlayerBasedOnTurn(), cardSelected!!)
             for (p in listPoint) {
                 tiles[p.y][p.x].setBackgroundResource(R.drawable.tile_default)
@@ -155,6 +163,7 @@ class PlayerActivity : AppCompatActivity() {
                         changeCard(ibSelected!!, moveNext.tag.toString())
                         val indexCard = player1.cards.indexOf(cardSelected)
                         player1.cards.remove(cardSelected)
+                        cardSelected = null
                         player1.cards.add(indexCard, nextCard)
                         changeCard(moveNext, temp!!.nama)
                         nextCard = temp
