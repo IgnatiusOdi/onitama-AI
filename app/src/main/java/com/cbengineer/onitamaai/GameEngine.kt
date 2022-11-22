@@ -6,7 +6,7 @@ class GameEngine(
   val player1: Player,
   val player2: Player,
 ) {
-  val board = createBoard(player1, player2)
+  var board = createBoard(player1, player2)
   var nextCard = Card.randomCardFromDeck()
   var turn = 1
 

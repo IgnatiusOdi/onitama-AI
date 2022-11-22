@@ -44,6 +44,7 @@ class PlayerActivity : AppCompatActivity() {
     player1 = Player("Player 1", Player.ORDER_PLAYER1)
     player2 = Player("Player 2", Player.ORDER_PLAYER2)
     game = GameEngine(player1, player2)
+    game.board = GameEngine.createBoard(player1, player2)
 
     for (i in 0 until tiles.size) {
       for (j in 0 until tiles[i].size) {
@@ -63,11 +64,10 @@ class PlayerActivity : AppCompatActivity() {
           val isValidMove = col.getTag(R.id.TAG_VALID_MOVE) as Boolean
           println("isValidMove=$isValidMove")
           if (isValidMove) {
-            val from = col.getTag(R.id.TAG_POINT) as Point
+            val to = col.getTag(R.id.TAG_POINT) as Point
             selectedCard?.let { card ->
               // move
-              game.board[i][j] = game.board[from.y][from.x]
-              game.board[from.y][from.x] = null
+              game.printBoard()
 //              game.move(from, Point(j, i), game.getPlayerBasedOnTurn(), card)
               val tileBaru = col
               // unhighlight valid move, tile lama
@@ -75,12 +75,23 @@ class PlayerActivity : AppCompatActivity() {
                 println("swapping...")
                 val piece: Piece = tileLama.getTag(R.id.TAG_TILE) as Piece
                 val from: Point = tileLama.getTag(R.id.TAG_POINT) as Point
+                game.board[to.y][to.x] = game.board[from.y][from.x]
+                game.board[from.y][from.x] = null
                 unHighlightValidMoves(game.getValidMoves(from, piece.player, card))
+                // reset tag valid move
                 tileLama.setTag(R.id.TAG_VALID_MOVE, false)
-                tileBaru.setImageResource(piece.getDrawable())
+                tileBaru.setTag(R.id.TAG_VALID_MOVE, false)
+
+                // set tag tile baru
                 tileBaru.setTag(R.id.TAG_TILE, tileLama.getTag(R.id.TAG_TILE))
                 tileLama.setTag(R.id.TAG_TILE, null)
+
+                // reset gambar pion/king
+                tileBaru.setImageResource(piece.getDrawable())
                 tileLama.setImageDrawable(null)
+
+                //reset background
+                tileBaru.setBackgroundResource(R.drawable.tile_default)
                 tileLama.setBackgroundResource(R.drawable.tile_default)
               }
             }
