@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/card_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/bgSecondary"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/tile_1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/tile_2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/tile_3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/king_red" />
+
+            <View
+                android:id="@+id/tile_4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/tile_5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/tile_6"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_7"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_8"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_9"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_10"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/tile_11"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_12"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_13"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_14"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_15"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/tile_16"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_17"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_18"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_19"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/tile_20"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/tile_21"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/pawn_blue" />
+
+            <View
+                android:id="@+id/tile_22"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/pawn_blue" />
+
+            <View
+                android:id="@+id/tile_23"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/king_blue" />
+
+            <View
+                android:id="@+id/tile_24"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="-2dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/pawn_blue" />
+
+            <View
+                android:id="@+id/tile_25"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="0dp"
+                android:background="@drawable/tile_default_sharp_corner"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/pawn_blue" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvNamaCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Nama Card"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

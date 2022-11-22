@@ -1,245 +1,174 @@
 package com.cbengineer.onitamaai
 
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class PlayerActivity : AppCompatActivity() {
+  lateinit var rvDeckPlayer1: RecyclerView
+  lateinit var rvDeckPlayer2: RecyclerView
+  lateinit var tvTurn: TextView
+  var tiles: Array<Array<ImageButton>> = arrayOf()
 
-    lateinit var tvNextCard: TextView
-    lateinit var tvPlayer1: TextView
-    lateinit var tvPlayer2: TextView
-    lateinit var moveNext: ImageButton
-    lateinit var movePlayer1_1: ImageButton
-    lateinit var movePlayer1_2: ImageButton
-    lateinit var movePlayer2_1: ImageButton
-    lateinit var movePlayer2_2: ImageButton
-    var tiles: Array<Array<ImageButton>> = arrayOf()
+  lateinit var nextCard: Card
+  lateinit var player1: Player
+  lateinit var player2: Player
+  lateinit var game: GameEngine
 
-    lateinit var nextCard: Card
-    lateinit var player1: Player
-    lateinit var player2: Player
-    lateinit var game: GameEngine
+  lateinit var adapterDeckPlayer1: AdapterCard
+  lateinit var adapterDeckPlayer2: AdapterCard
 
-    private var cardSelected: Card? = null
-    private var tileSelected: Point? = null
-    private var ibSelected: ImageButton? = null
+  var selectedCard: Card? = null
+  var selectedTile: ImageButton? = null
 
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_player)
+    tiles = arrayOf(
+      arrayOf(findViewById(R.id.tile_1), findViewById(R.id.tile_2), findViewById(R.id.tile_3), findViewById(R.id.tile_4), findViewById(R.id.tile_5)),
+      arrayOf(findViewById(R.id.tile_6), findViewById(R.id.tile_7), findViewById(R.id.tile_8), findViewById(R.id.tile_9), findViewById(R.id.tile_10)),
+      arrayOf(findViewById(R.id.tile_11), findViewById(R.id.tile_12), findViewById(R.id.tile_13), findViewById(R.id.tile_14), findViewById(R.id.tile_15)),
+      arrayOf(findViewById(R.id.tile_16), findViewById(R.id.tile_17), findViewById(R.id.tile_18), findViewById(R.id.tile_19), findViewById(R.id.tile_20)),
+      arrayOf(findViewById(R.id.tile_21), findViewById(R.id.tile_22), findViewById(R.id.tile_23), findViewById(R.id.tile_24), findViewById(R.id.tile_25)),
+    )
+    rvDeckPlayer1 = findViewById(R.id.rvDeckPlayer1)
+    rvDeckPlayer2 = findViewById(R.id.rvDeckPlayer2)
+    tvTurn = findViewById(R.id.tvTurn)
 
-        tvNextCard = findViewById(R.id.tvNextCard)
-        tvPlayer1 = findViewById(R.id.tvPlayer1)
-        tvPlayer2 = findViewById(R.id.tvPlayer2)
-        moveNext = findViewById(R.id.moveNext)
-        movePlayer1_1 = findViewById(R.id.movePlayer1_1)
-        movePlayer1_2 = findViewById(R.id.movePlayer1_2)
-        movePlayer2_1 = findViewById(R.id.movePlayer2_1)
-        movePlayer2_2 = findViewById(R.id.movePlayer2_2)
-        tiles = arrayOf(
-            arrayOf(findViewById(R.id.tile01), findViewById(R.id.tile02), findViewById(R.id.tile03), findViewById(R.id.tile04), findViewById(R.id.tile05)),
-            arrayOf(findViewById(R.id.tile06), findViewById(R.id.tile07), findViewById(R.id.tile08), findViewById(R.id.tile09), findViewById(R.id.tile10)),
-            arrayOf(findViewById(R.id.tile11), findViewById(R.id.tile12), findViewById(R.id.tile13), findViewById(R.id.tile14), findViewById(R.id.tile15)),
-            arrayOf(findViewById(R.id.tile16), findViewById(R.id.tile17), findViewById(R.id.tile18), findViewById(R.id.tile19), findViewById(R.id.tile20)),
-            arrayOf(findViewById(R.id.tile21), findViewById(R.id.tile22), findViewById(R.id.tile23), findViewById(R.id.tile24), findViewById(R.id.tile25)),
-        )
+    Card.deck = Card.getAllCard()
+    nextCard = Card.randomCardFromDeck()
 
-        // REFILL CARD DECK
-        Card.deck = Card.getAllCard()
+    player1 = Player("Player 1", Player.ORDER_PLAYER1)
+    player2 = Player("Player 2", Player.ORDER_PLAYER2)
+    game = GameEngine(player1, player2)
 
-        player1 = Player("PLAYER 1", Player.ORDER_PLAYER1)
-        player2 = Player("PLAYER 2", Player.ORDER_PLAYER2)
-        game = GameEngine(player1, player2)
-
-        // PLAYER 1 CARD
-        changeCard(movePlayer1_1, player1.cards[0].nama)
-        changeCard(movePlayer1_2, player1.cards[1].nama)
-
-        // PLAYER 2 CARD
-        changeCard(movePlayer2_1, player2.cards[0].nama)
-        changeCard(movePlayer2_2, player2.cards[1].nama)
-
-        tvPlayer2.rotation = 180f
-        movePlayer2_1.rotation = 180f
-        movePlayer2_2.rotation = 180f
-
-        // NEXT CARD
-        nextCard = game.nextCard
-        changeCard(moveNext, nextCard.nama)
-        tvNextCard.text = "NEXT CARD\n${moveNext.tag.toString().uppercase()}"
-
-        for (i in 0 until tiles.size) {
-            for (j in 0 until tiles[i].size) {
-                tiles[i][j].tag = game.board[i][j]
-                tiles[i][j].setOnClickListener {
-                    if (game.board[i][j] != null) {
-                        val piece = game.board[i][j]
-                        if (game.board[i][j]!!.player == game.getPlayerBasedOnTurn()) {
-                            if (cardSelected != null) { // card null check
-                                piece?.let {
-                                    changeTileSelected(Point(j, i))
-                                    println(cardSelected)
-                                }
-                            } else {
-                                Toast.makeText(this, "Select a card", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
+    for (i in 0 until tiles.size) {
+      for (j in 0 until tiles[i].size) {
+        val col = tiles[i][j]
+        col.setTag(R.id.TAG_TILE, game.board[i][j])
+        col.setTag(R.id.TAG_POINT, Point(j, i))
+        col.setTag(R.id.TAG_VALID_MOVE, false)
+        col.setOnClickListener {
+          println("==========DEBUG==========")
+          println(col.getTag(R.id.TAG_TILE) as Piece?)
+          println(col.getTag(R.id.TAG_POINT) as Point)
+          println(col.getTag(R.id.TAG_VALID_MOVE) as Boolean)
+          println(game.board[(col.getTag(R.id.TAG_POINT) as Point).y][(col.getTag(R.id.TAG_POINT) as Point).x])
+          println("BOARD SESUDAH:")
+          game.printBoard()
+          //
+          val isValidMove = col.getTag(R.id.TAG_VALID_MOVE) as Boolean
+          println("isValidMove=$isValidMove")
+          if (isValidMove) {
+            val from = col.getTag(R.id.TAG_POINT) as Point
+            selectedCard?.let { card ->
+              // move
+              game.board[i][j] = game.board[from.y][from.x]
+              game.board[from.y][from.x] = null
+//              game.move(from, Point(j, i), game.getPlayerBasedOnTurn(), card)
+              val tileBaru = col
+              // unhighlight valid move, tile lama
+              selectedTile?.let { tileLama ->
+                println("swapping...")
+                val piece: Piece = tileLama.getTag(R.id.TAG_TILE) as Piece
+                val from: Point = tileLama.getTag(R.id.TAG_POINT) as Point
+                unHighlightValidMoves(game.getValidMoves(from, piece.player, card))
+                tileLama.setTag(R.id.TAG_VALID_MOVE, false)
+                tileBaru.setImageResource(piece.getDrawable())
+                tileBaru.setTag(R.id.TAG_TILE, tileLama.getTag(R.id.TAG_TILE))
+                tileLama.setTag(R.id.TAG_TILE, null)
+                tileLama.setImageDrawable(null)
+                tileLama.setBackgroundResource(R.drawable.tile_default)
+              }
             }
+          }
+          else {
+            onTileClicked(col, Point(j, i))
+          }
+          println(game.board[(col.getTag(R.id.TAG_POINT) as Point).y][(col.getTag(R.id.TAG_POINT) as Point).x])
+          println("BOARD SESUDAH:")
+          game.printBoard()
+          println("==========DEBUG==========")
         }
-
-        movePlayer1_1.setOnClickListener {
-            if (game.turn == 1) {
-                resetTile()
-                cardSelected = player1.cards[0]
-                ibSelected = movePlayer1_1
-                Toast.makeText(this, player1.cards[0].nama, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        movePlayer1_2.setOnClickListener {
-            if (game.turn == 1) {
-                resetTile()
-                cardSelected = player1.cards[1]
-                ibSelected = movePlayer1_2
-                Toast.makeText(this, player1.cards[1].nama, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        movePlayer2_1.setOnClickListener {
-            if (game.turn == 2) {
-                resetTile()
-                cardSelected = player2.cards[0]
-                ibSelected = movePlayer2_1
-                Toast.makeText(this, player2.cards[0].nama, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        movePlayer2_2.setOnClickListener {
-            if (game.turn == 2) {
-                resetTile()
-                cardSelected = player2.cards[1]
-                ibSelected = movePlayer2_2
-                Toast.makeText(this, player2.cards[1].nama, Toast.LENGTH_SHORT).show()
-            }
-        }
+      }
     }
 
-    fun resetTile() {
-        if (tileSelected != null && cardSelected != null) {
-            val listPoint = game.getValidMoves(tileSelected!!, game.getPlayerBasedOnTurn(), cardSelected!!)
-            for (p in listPoint) {
-                tiles[p.y][p.x].setBackgroundResource(R.drawable.tile_default)
-                tiles[p.y][p.x].setOnClickListener(null)
-            }
-        }
-    }
+    tvTurn.text = getTurnText()
+    adapterDeckPlayer1 = AdapterCard(this, player1.cards, player1, game, {selectCard(it)}, {it == selectedCard})
+    adapterDeckPlayer2 = AdapterCard(this, player2.cards, player2, game, {selectCard(it)}, {it == selectedCard})
 
-    fun changeTileSelected(point: Point) {
-        resetTile()
-        tileSelected = point
-        val listPoint =
-            cardSelected?.let {
-                game.getValidMoves(tileSelected!!, game.getPlayerBasedOnTurn(),
-                    it
-                )
-            }
-        if (listPoint != null) {
-            for (p in listPoint) {
-                tiles[p.y][p.x].setBackgroundColor(resources.getColor(R.color.red))
-                tiles[p.y][p.x].setOnClickListener {
-                    resetTile()
-                    tileSelected?.let { it1 -> cardSelected?.let { it2 ->
-                        game.move(it1, Point(p.y, p.x), game.getPlayerBasedOnTurn(),
-                            it2
-                        )
-                        val temp = cardSelected
-                        changeCard(ibSelected!!, moveNext.tag.toString())
-                        val indexCard = player1.cards.indexOf(cardSelected)
-                        player1.cards.remove(cardSelected)
-                        cardSelected = null
-                        player1.cards.add(indexCard, nextCard)
-                        changeCard(moveNext, temp!!.nama)
-                        nextCard = temp
-//                        game.endTurn()
-                    } }
-                }
-            }
-        }
-    }
+    rvDeckPlayer1.adapter = adapterDeckPlayer1
+    rvDeckPlayer2.adapter = adapterDeckPlayer2
 
-    fun changeCard(ib: ImageButton, nama: String) {
-        when (nama) {
-            "Boar" -> {
-                ib.setImageResource(R.drawable.boar)
-                ib.tag = "Boar"
-            }
-            "Cobra" -> {
-                ib.setImageResource(R.drawable.cobra)
-                ib.tag = "Cobra"
-            }
-            "Crab" -> {
-                ib.setImageResource(R.drawable.crab)
-                ib.tag = "Crab"
-            }
-            "Crane" -> {
-                ib.setImageResource(R.drawable.crane)
-                ib.tag = "Crane"
-            }
-            "Dragon" -> {
-                ib.setImageResource(R.drawable.dragon)
-                ib.tag = "Dragon"
-            }
-            "Eel" -> {
-                ib.setImageResource(R.drawable.eel)
-                ib.tag = "Eel"
-            }
-            "Elephant" -> {
-                ib.setImageResource(R.drawable.elephant)
-                ib.tag = "Elephant"
-            }
-            "Frog" -> {
-                ib.setImageResource(R.drawable.frog)
-                ib.tag = "Frog"
-            }
-            "Goose" -> {
-                ib.setImageResource(R.drawable.goose)
-                ib.tag = "Goose"
-            }
-            "Horse" -> {
-                ib.setImageResource(R.drawable.horse)
-                ib.tag = "Horse"
-            }
-            "Mantis" -> {
-                ib.setImageResource(R.drawable.mantis)
-                ib.tag = "Mantis"
-            }
-            "Monkey" -> {
-                ib.setImageResource(R.drawable.monkey)
-                ib.tag = "Monkey"
-            }
-            "Ox" -> {
-                ib.setImageResource(R.drawable.ox)
-                ib.tag = "Ox"
-            }
-            "Rabbit" -> {
-                ib.setImageResource(R.drawable.rabbit)
-                ib.tag = "Rabbit"
-            }
-            "Rooster" -> {
-                ib.setImageResource(R.drawable.rooster)
-                ib.tag = "Rooster"
-            }
-            "Tiger" -> {
-                ib.setImageResource(R.drawable.tiger)
-                ib.tag = "Tiger"
-            }
+    rvDeckPlayer1.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    rvDeckPlayer2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+  }
+
+  fun onTileClicked(tile: ImageButton, from: Point) {
+    // set selectedTile sebelumnya jadi default
+    selectedTile?.setBackgroundResource(R.drawable.tile_default)
+    val piece: Piece? = tile.getTag(R.id.TAG_TILE) as Piece?
+    // kalau selectedTile yang sebelumnya sama dengan tile yang di click sekarang
+    if (selectedTile == tile) {
+      // unset, lalu unhighlight valid moves
+      selectedTile = null
+      if (piece != null) {
+        selectedCard?.let {
+          unHighlightValidMoves(game.getValidMoves(from, piece.player, it))
         }
+      }
     }
+    // jika tidak dan piece nya tidak null, dan piece yang di klik itu adalah piece milik
+    // player yang sedang gerak turn ini, maka
+    else if (
+      selectedTile != tile
+      && piece != null
+      && piece.player == game.getPlayerBasedOnTurn()
+    ) {
+      selectedCard?.let {
+        val card = it
+        // unhighlight validMoves sebelumnya
+        selectedTile?.let {
+          val from: Point = it.getTag(R.id.TAG_POINT) as Point
+          unHighlightValidMoves(game.getValidMoves(from, piece.player, card))
+        }
+      }
+      // set selectedTile sesuai dengan tile yang di klik sekarang
+      selectedTile = tile
+      // highlight valid moves
+      selectedCard?.let {
+        highlightValidMoves(game.getValidMoves(from, piece.player, it))
+      }
+    }
+    // set backgroundResource selectedTile
+    selectedTile?.setBackgroundResource(R.drawable.tile_selected)
+  }
+
+  fun highlightValidMoves(validMoves: List<Point>) {
+    for (move in validMoves) {
+      tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_valid_move)
+      tiles[move.y][move.x].setTag(R.id.TAG_VALID_MOVE, true)
+    }
+  }
+
+  fun unHighlightValidMoves(validMoves: List<Point>) {
+    for (move in validMoves) {
+      tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_default)
+      tiles[move.y][move.x].setTag(R.id.TAG_VALID_MOVE, false)
+    }
+  }
+
+  fun selectCard(card: Card) {
+    if (card == selectedCard)
+      selectedCard = null
+    else
+      selectedCard = card
+  }
+
+  fun getTurnText(): String {
+    return "${game.getPlayerBasedOnTurn().nama}'s Turn"
+  }
 }

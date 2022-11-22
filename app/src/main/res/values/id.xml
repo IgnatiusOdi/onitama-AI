@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="TAG_TILE" />
+    <item type="id" name="TAG_POINT" />
+    <item type="id" name="TAG_VALID_MOVE" />
+</resources>
