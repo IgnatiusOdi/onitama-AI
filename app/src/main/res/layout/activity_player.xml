@@ -57,7 +57,7 @@
                 android:id="@+id/tile_3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/tile_default"
+                android:background="@drawable/tile_base_red"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/king_red" />
@@ -246,7 +246,7 @@
                 android:id="@+id/tile_23"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/tile_default"
+                android:background="@drawable/tile_base_blue"
                 android:padding="8dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/king_blue" />

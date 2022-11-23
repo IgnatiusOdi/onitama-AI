@@ -1,6 +1,5 @@
 package com.cbengineer.onitamaai
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -134,6 +133,8 @@ class PlayerActivity : AppCompatActivity() {
                 //reset background
                 tileBaru.setBackgroundResource(R.drawable.tile_default)
                 tileLama.setBackgroundResource(R.drawable.tile_default)
+                tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
+                tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
               }
             }
             // pengecekan menang
@@ -147,6 +148,8 @@ class PlayerActivity : AppCompatActivity() {
                 rvDiscardCard.adapter = adapterDeckPlayer1
               else
                 rvDiscardCard.adapter = adapterDeckPlayer2
+//              adapterDeckPlayer1.notifyDataSetChanged()
+//              adapterDeckPlayer2.notifyDataSetChanged()
               llDiscardCardParent.visibility = View.VISIBLE
             }
           }
@@ -196,7 +199,19 @@ class PlayerActivity : AppCompatActivity() {
 
   fun onTileClicked(tile: ImageButton, from: Point) {
     // set selectedTile sebelumnya jadi default
-    selectedTile?.setBackgroundResource(R.drawable.tile_default)
+    selectedTile?.let {
+      val point: Point = it.getTag(R.id.TAG_POINT) as Point
+      if (point.y == GameEngine.PLAYER1_BASE.y && point.x == GameEngine.PLAYER1_BASE.x) {
+        tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
+      }
+      else if (point.y == GameEngine.PLAYER2_BASE.y && point.x == GameEngine.PLAYER2_BASE.x) {
+        tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
+      }
+      else {
+        tiles[point.y][point.x].setBackgroundResource(R.drawable.tile_default)
+      }
+    }
+//    selectedTile?.setBackgroundResource(R.drawable.tile_default)
     val piece: Piece? = tile.getTag(R.id.TAG_TILE) as Piece?
     // kalau selectedTile yang sebelumnya sama dengan tile yang di click sekarang
     if (selectedTile == tile) {
@@ -231,19 +246,49 @@ class PlayerActivity : AppCompatActivity() {
       }
     }
     // set backgroundResource selectedTile
-    selectedTile?.setBackgroundResource(R.drawable.tile_selected)
+    selectedTile?.let {
+      val point: Point = it.getTag(R.id.TAG_POINT) as Point
+      if (point.y == GameEngine.PLAYER1_BASE.y && point.x == GameEngine.PLAYER1_BASE.x) {
+        tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue_selected)
+      }
+      else if (point.y == GameEngine.PLAYER2_BASE.y && point.x == GameEngine.PLAYER2_BASE.x) {
+        tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red_selected)
+      }
+      else {
+        tiles[point.y][point.x].setBackgroundResource(R.drawable.tile_selected)
+      }
+    }
+//    selectedTile?.setBackgroundResource(R.drawable.tile_selected)
+//    tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
+//    tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
   }
 
   fun highlightValidMoves(validMoves: List<Point>) {
     for (move in validMoves) {
-      tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_valid_move)
+      if (move.y == GameEngine.PLAYER1_BASE.y && move.x == GameEngine.PLAYER1_BASE.x) {
+        tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue_valid_move)
+      }
+      else if (move.y == GameEngine.PLAYER2_BASE.y && move.x == GameEngine.PLAYER2_BASE.x) {
+        tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red_valid_move)
+      }
+      else {
+        tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_valid_move)
+      }
       tiles[move.y][move.x].setTag(R.id.TAG_VALID_MOVE, true)
     }
   }
 
   fun unHighlightValidMoves(validMoves: List<Point>) {
     for (move in validMoves) {
-      tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_default)
+      if (move.y == GameEngine.PLAYER1_BASE.y && move.x == GameEngine.PLAYER1_BASE.x) {
+        tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
+      }
+      else if (move.y == GameEngine.PLAYER2_BASE.y && move.x == GameEngine.PLAYER2_BASE.x) {
+        tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
+      }
+      else {
+        tiles[move.y][move.x].setBackgroundResource(R.drawable.tile_default)
+      }
       tiles[move.y][move.x].setTag(R.id.TAG_VALID_MOVE, false)
     }
   }

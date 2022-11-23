@@ -115,11 +115,13 @@ class GameEngine(
    */
   fun checkLegalMovesExist(player: Player): Boolean {
     var legalMovesExist: Boolean = false
+    var pieceCount: Int = 0
     for (card in player.cards) {
       for (i in 0 until board.size) {
         for (j in 0 until board[i].size) {
           val piece = board[i][j]
           if (piece != null && piece.player == player) {
+            pieceCount++
             val validMoves = getValidMoves(Point(j, i), player, card)
             if (validMoves.isNotEmpty()) {
               legalMovesExist = true
@@ -129,6 +131,7 @@ class GameEngine(
         }
       }
     }
+    if (pieceCount == 0) return true
     return legalMovesExist
   }
 
