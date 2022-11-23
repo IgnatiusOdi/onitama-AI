@@ -28,6 +28,16 @@ class GameEngine(
   }
 
   /**
+   * @return player2 jika turn ganjil, player1 jika turn genap
+   */
+  fun getOpponentBasedOnTurn(): Player {
+    return when (turn % 2) {
+      1 -> player2
+      else -> player1
+    }
+  }
+
+  /**
    * deck card player ditambah next card dan merandom nextCard dari deck
    * @param player card akan dimasukkan dalam deck player ini
    */
@@ -61,17 +71,15 @@ class GameEngine(
   }
 
   /**
-   * Card yang dipakai akan diremove dari hand player, dan dimasukkan ke dalam deck global
-   * dan memanggil function [putNextCardToPlayer]
+   *
    * @param from titik asal
    * @param to titik tujuan
    * @param player player yang melakukan move
    * @param card card yang digunakan
    */
-  fun move(from: Point, to: Point, player: Player, card: Card) {
+  fun move(from: Point, to: Point) {
     board[to.y][to.x] = board[from.y][from.x]
     board[from.y][from.x] = null
-//    putNextCardToPlayer(player)
   }
 
   /**
@@ -92,9 +100,36 @@ class GameEngine(
     val basePoint = getEnemyBasePoint(player)
     val pieceAtBaseEnemyPlayer: Piece? = board[basePoint.y][basePoint.x]
     var isEnemyBaseTaken = pieceAtBaseEnemyPlayer != null &&
-      pieceAtBaseEnemyPlayer.player != player &&
+      pieceAtBaseEnemyPlayer.player == player &&
       pieceAtBaseEnemyPlayer.role == "KING"
+    println("isEnemyKingDead = ${isEnemyKingDead}")
+    println("isEnemyBaseTaken = ${isEnemyBaseTaken}")
     return isEnemyKingDead || isEnemyBaseTaken
+  }
+
+  /**
+   * Discarding
+  If you have no moves that you can legally make, you instead will discard a card, playing it and not moving a pieces
+
+  If you can play a move, you cannot discard
+   */
+  fun checkLegalMovesExist(player: Player): Boolean {
+    var legalMovesExist: Boolean = false
+    for (card in player.cards) {
+      for (i in 0 until board.size) {
+        for (j in 0 until board[i].size) {
+          val piece = board[i][j]
+          if (piece != null && piece.player == player) {
+            val validMoves = getValidMoves(Point(j, i), player, card)
+            if (validMoves.isNotEmpty()) {
+              legalMovesExist = true
+              return legalMovesExist
+            }
+          }
+        }
+      }
+    }
+    return legalMovesExist
   }
 
   fun printBoard() {

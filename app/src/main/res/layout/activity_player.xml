@@ -289,4 +289,72 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/llMessageParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="18dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btnBackToMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back To Menu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDiscardCardParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="18dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvDiscardCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="No legal moves!\nPlease pick a card to discard."
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDiscardCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/btnDiscard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Discard" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,25 @@
 package com.cbengineer.onitamaai
 
+import android.opengl.Visibility
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class PlayerActivity : AppCompatActivity() {
+  lateinit var llMessageParent: LinearLayout
+  lateinit var tvMessage: TextView
+  lateinit var btnBackToMenu: Button
+
+  lateinit var llDiscardCardParent: LinearLayout
+  lateinit var rvDiscardCard: RecyclerView
+  lateinit var tvDiscardCard: TextView
+  lateinit var btnDiscard: Button
+
   lateinit var rvDeckPlayer1: RecyclerView
   lateinit var rvDeckPlayer2: RecyclerView
   lateinit var tvTurn: TextView
@@ -38,13 +50,44 @@ class PlayerActivity : AppCompatActivity() {
     rvDeckPlayer2 = findViewById(R.id.rvDeckPlayer2)
     tvTurn = findViewById(R.id.tvTurn)
 
+    llDiscardCardParent = findViewById(R.id.llDiscardCardParent)
+    rvDiscardCard = findViewById(R.id.rvDiscardCard)
+    tvDiscardCard = findViewById(R.id.tvDiscardCard)
+    btnDiscard = findViewById(R.id.btnDiscard)
+
+    llMessageParent = findViewById(R.id.llMessageParent)
+    tvMessage = findViewById(R.id.tvMessage)
+    btnBackToMenu = findViewById(R.id.btnBackToMenu)
+
+    btnBackToMenu.setOnClickListener {
+      finish()
+    }
+
+    btnDiscard.setOnClickListener {
+      if (selectedCard != null) {
+        val player = game.getPlayerBasedOnTurn()
+        val opponent = game.getOpponentBasedOnTurn()
+        opponent.cards.remove(game.nextCard)
+        player.cards.add(game.nextCard)
+        game.nextCard = selectedCard!!
+        adapterDeckPlayer1.notifyDataSetChanged()
+        adapterDeckPlayer2.notifyDataSetChanged()
+        endTurn()
+        llDiscardCardParent.visibility = View.GONE
+      }
+      else {
+        Toast.makeText(this, "Please pick a card...", Toast.LENGTH_SHORT).show()
+      }
+    }
+
     Card.deck = Card.getAllCard()
     nextCard = Card.randomCardFromDeck()
 
     player1 = Player("Player 1", Player.ORDER_PLAYER1)
     player2 = Player("Player 2", Player.ORDER_PLAYER2)
     game = GameEngine(player1, player2)
-    game.board = GameEngine.createBoard(player1, player2)
+    player2.cards.add(game.nextCard)
+    tvTurn.setTextColor(ContextCompat.getColor(this, R.color.blue))
 
     for (i in 0 until tiles.size) {
       for (j in 0 until tiles[i].size) {
@@ -53,30 +96,28 @@ class PlayerActivity : AppCompatActivity() {
         col.setTag(R.id.TAG_POINT, Point(j, i))
         col.setTag(R.id.TAG_VALID_MOVE, false)
         col.setOnClickListener {
-          println("==========DEBUG==========")
-          println(col.getTag(R.id.TAG_TILE) as Piece?)
-          println(col.getTag(R.id.TAG_POINT) as Point)
-          println(col.getTag(R.id.TAG_VALID_MOVE) as Boolean)
-          println(game.board[(col.getTag(R.id.TAG_POINT) as Point).y][(col.getTag(R.id.TAG_POINT) as Point).x])
-          println("BOARD SESUDAH:")
-          game.printBoard()
           //
           val isValidMove = col.getTag(R.id.TAG_VALID_MOVE) as Boolean
-          println("isValidMove=$isValidMove")
           if (isValidMove) {
             val to = col.getTag(R.id.TAG_POINT) as Point
             selectedCard?.let { card ->
               // move
-              game.printBoard()
-//              game.move(from, Point(j, i), game.getPlayerBasedOnTurn(), card)
               val tileBaru = col
               // unhighlight valid move, tile lama
               selectedTile?.let { tileLama ->
-                println("swapping...")
+                // swapping
                 val piece: Piece = tileLama.getTag(R.id.TAG_TILE) as Piece
                 val from: Point = tileLama.getTag(R.id.TAG_POINT) as Point
-                game.board[to.y][to.x] = game.board[from.y][from.x]
-                game.board[from.y][from.x] = null
+                game.move(from, to)
+                val player = game.getPlayerBasedOnTurn()
+                val opponent = game.getOpponentBasedOnTurn()
+                opponent.cards.remove(game.nextCard)
+                player.cards.add(game.nextCard)
+                game.nextCard = card
+                adapterDeckPlayer1.notifyDataSetChanged()
+                adapterDeckPlayer2.notifyDataSetChanged()
+
+                // unhighlight valid moves
                 unHighlightValidMoves(game.getValidMoves(from, piece.player, card))
                 // reset tag valid move
                 tileLama.setTag(R.id.TAG_VALID_MOVE, false)
@@ -95,14 +136,23 @@ class PlayerActivity : AppCompatActivity() {
                 tileLama.setBackgroundResource(R.drawable.tile_default)
               }
             }
+            // pengecekan menang
+            if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
+              showMessageMenang(game.getPlayerBasedOnTurn())
+            }
+            endTurn()
+            if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
+              selectedCard = null
+              if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1)
+                rvDiscardCard.adapter = adapterDeckPlayer1
+              else
+                rvDiscardCard.adapter = adapterDeckPlayer2
+              llDiscardCardParent.visibility = View.VISIBLE
+            }
           }
           else {
             onTileClicked(col, Point(j, i))
           }
-          println(game.board[(col.getTag(R.id.TAG_POINT) as Point).y][(col.getTag(R.id.TAG_POINT) as Point).x])
-          println("BOARD SESUDAH:")
-          game.printBoard()
-          println("==========DEBUG==========")
         }
       }
     }
@@ -116,6 +166,32 @@ class PlayerActivity : AppCompatActivity() {
 
     rvDeckPlayer1.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     rvDeckPlayer2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    rvDiscardCard.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+  }
+
+  fun showMessageMenang(player: Player) {
+    tvMessage.text = "${player.nama} Won!"
+    if (player.order == Player.ORDER_PLAYER1) {
+      tvMessage.setTextColor(ContextCompat.getColor(this, R.color.blue))
+    }
+    else {
+      tvMessage.setTextColor(ContextCompat.getColor(this, R.color.red))
+    }
+    llMessageParent.isVisible = true
+  }
+
+  fun endTurn() {
+    game.endTurn()
+    selectedCard = null
+    selectedTile = null
+    tvTurn.text = getTurnText()
+    if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1) {
+      tvTurn.setTextColor(ContextCompat.getColor(this, R.color.blue))
+      adapterDeckPlayer2.notifyDataSetChanged()
+    } else {
+      tvTurn.setTextColor(ContextCompat.getColor(this, R.color.red))
+      adapterDeckPlayer1.notifyDataSetChanged()
+    }
   }
 
   fun onTileClicked(tile: ImageButton, from: Point) {
@@ -173,10 +249,37 @@ class PlayerActivity : AppCompatActivity() {
   }
 
   fun selectCard(card: Card) {
-    if (card == selectedCard)
+    if (card == selectedCard) {
+      selectedTile?.let {
+        val piece: Piece = it.getTag(R.id.TAG_TILE) as Piece
+        val point: Point? = it.getTag(R.id.TAG_POINT) as Point?
+        point?.let {
+          unHighlightValidMoves(game.getValidMoves(point, piece.player, card))
+        }
+      }
       selectedCard = null
-    else
+    }
+    else {
+      selectedCard?.let { cardLama->
+        selectedTile?.let {
+          val piece: Piece? = it.getTag(R.id.TAG_TILE) as Piece?
+          val point: Point? = it.getTag(R.id.TAG_POINT) as Point?
+          if (piece != null){
+            point?.let {
+              unHighlightValidMoves(game.getValidMoves(point, piece.player, cardLama))
+            }
+          }
+        }
+      }
       selectedCard = card
+      selectedTile?.let {
+        val piece: Piece = it.getTag(R.id.TAG_TILE) as Piece
+        val point: Point? = it.getTag(R.id.TAG_POINT) as Point?
+        point?.let {
+          highlightValidMoves(game.getValidMoves(point, piece.player, card))
+        }
+      }
+    }
   }
 
   fun getTurnText(): String {

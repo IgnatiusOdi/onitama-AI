@@ -66,11 +66,19 @@ class AdapterCard(
     val item = listCard[position]
     val from = Point(2, 2)
     val listMove = item.getMoves(from, player)
+    for (i in 0 until holder.tiles.size) {
+      for (j in 0 until holder.tiles[i].size) {
+        holder.tiles[i][j].setBackgroundResource(R.drawable.tile_default_sharp_corner)
+      }
+    }
     holder.tiles[from.y][from.x].setBackgroundResource(R.drawable.card_tile_middle)
     for (point in listMove) {
       holder.tiles[point.y][point.x].setBackgroundResource(R.drawable.card_tile_valid_move)
     }
-    holder.tvNamaCard.setText(item.nama)
+    if (item != gameEngine.nextCard)
+      holder.tvNamaCard.setText(item.nama)
+    else
+      holder.tvNamaCard.setText("${item.nama} (played)")
     if (isCardSelected(item)) {
       holder.itemView.setBackgroundResource(R.drawable.card_parent_selected)
     }
@@ -78,8 +86,6 @@ class AdapterCard(
       holder.itemView.setBackgroundResource(R.drawable.card_parent)
     }
     holder.itemView.setOnClickListener {
-      println("gameEngine.getPlayerBasedOnTurn()=${gameEngine.getPlayerBasedOnTurn().nama}")
-      println("player=${player.nama}")
       if (gameEngine.getPlayerBasedOnTurn() == player) {
         onCardSelected(item)
         notifyDataSetChanged()
