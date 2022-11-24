@@ -230,12 +230,11 @@ class PlayerActivity : AppCompatActivity() {
       && piece != null
       && piece.player == game.getPlayerBasedOnTurn()
     ) {
-      selectedCard?.let {
-        val card = it
+      selectedCard?.let { card ->
         // unhighlight validMoves sebelumnya
         selectedTile?.let {
-          val from: Point = it.getTag(R.id.TAG_POINT) as Point
-          unHighlightValidMoves(game.getValidMoves(from, piece.player, card))
+          val fromm: Point = it.getTag(R.id.TAG_POINT) as Point
+          unHighlightValidMoves(game.getValidMoves(fromm, piece.player, card))
         }
       }
       // set selectedTile sesuai dengan tile yang di klik sekarang

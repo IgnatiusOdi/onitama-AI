@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     btVsAI.setOnClickListener {
-      Toast.makeText(this, "COMING SOON", Toast.LENGTH_SHORT).show()
+      startActivity(Intent(this, AIActivity::class.java))
+//      Toast.makeText(this, "COMING SOON", Toast.LENGTH_SHORT).show()
     }
   }
 

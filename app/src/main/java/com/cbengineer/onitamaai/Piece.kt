@@ -1,23 +1,25 @@
 package com.cbengineer.onitamaai
 
-import android.graphics.drawable.Drawable
-
 class Piece(
-  val role: String, // "PAWN" atau "KING"
+  val role: PieceRole, // "PAWN" atau "KING"
   val player: Player,
 ) {
   fun getDrawable(): Int {
-    return if (role == "PAWN" && player.order == Player.ORDER_PLAYER1) R.drawable.pawn_blue
-    else if (role == "PAWN" && player.order == Player.ORDER_PLAYER2) R.drawable.pawn_red
-    else if (role == "KING" && player.order == Player.ORDER_PLAYER1) R.drawable.king_blue
+    return if (role == PieceRole.PAWN && player.order == Player.ORDER_PLAYER1) R.drawable.pawn_blue
+    else if (role == PieceRole.PAWN && player.order == Player.ORDER_PLAYER2) R.drawable.pawn_red
+    else if (role == PieceRole.KING && player.order == Player.ORDER_PLAYER1) R.drawable.king_blue
     else R.drawable.king_red
   }
 
   override fun toString(): String {
     return when (role) {
-      "PAWN" -> "P"
-      "KING" -> "K"
-      else -> ""
+      PieceRole.PAWN -> "P"
+      PieceRole.KING -> "K"
     }
+  }
+
+  enum class PieceRole{
+    PAWN,
+    KING
   }
 }

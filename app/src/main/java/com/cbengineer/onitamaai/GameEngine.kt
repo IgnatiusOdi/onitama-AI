@@ -91,7 +91,7 @@ class GameEngine(
     var isEnemyKingDead = true
     for (row: Array<Piece?> in board) {
       for (col: Piece? in row) {
-        if (col != null && col.role == "KING" && col.player != player) {
+        if (col != null && col.role == Piece.PieceRole.KING && col.player != player) {
           isEnemyKingDead = false
         }
       }
@@ -99,22 +99,23 @@ class GameEngine(
     // cek apakah piece yang ada di base musuh itu KING dan bukan milik player saat ini
     val basePoint = getEnemyBasePoint(player)
     val pieceAtBaseEnemyPlayer: Piece? = board[basePoint.y][basePoint.x]
-    var isEnemyBaseTaken = pieceAtBaseEnemyPlayer != null &&
+    val isEnemyBaseTaken = pieceAtBaseEnemyPlayer != null &&
       pieceAtBaseEnemyPlayer.player == player &&
-      pieceAtBaseEnemyPlayer.role == "KING"
-    println("isEnemyKingDead = ${isEnemyKingDead}")
-    println("isEnemyBaseTaken = ${isEnemyBaseTaken}")
+      pieceAtBaseEnemyPlayer.role == Piece.PieceRole.KING
+    println("isEnemyKingDead = $isEnemyKingDead")
+    println("isEnemyBaseTaken = $isEnemyBaseTaken")
     return isEnemyKingDead || isEnemyBaseTaken
   }
 
   /**
    * Discarding
-  If you have no moves that you can legally make, you instead will discard a card, playing it and not moving a pieces
-
-  If you can play a move, you cannot discard
+   * If you have no moves that you can legally make, you instead will discard a card, playing it and not moving a pieces
+   *
+   * If you can play a move, you cannot discard
+   * @param player Player to check
+   * @return Boolean true/false
    */
   fun checkLegalMovesExist(player: Player): Boolean {
-    var legalMovesExist: Boolean = false
     var pieceCount: Int = 0
     for (card in player.cards) {
       for (i in 0 until board.size) {
@@ -124,15 +125,13 @@ class GameEngine(
             pieceCount++
             val validMoves = getValidMoves(Point(j, i), player, card)
             if (validMoves.isNotEmpty()) {
-              legalMovesExist = true
-              return legalMovesExist
+              return true
             }
           }
         }
       }
     }
-    if (pieceCount == 0) return true
-    return legalMovesExist
+    return pieceCount == 0
   }
 
   fun printBoard() {
@@ -164,22 +163,22 @@ class GameEngine(
       return arrayOf<Array<Piece?>>(
         //first row, player 2
         arrayOf<Piece?>(
-          Piece("PAWN", player2),
-          Piece("PAWN", player2),
-          Piece("KING", player2),
-          Piece("PAWN", player2),
-          Piece("PAWN", player2)
+          Piece(Piece.PieceRole.PAWN, player2),
+          Piece(Piece.PieceRole.PAWN, player2),
+          Piece(Piece.PieceRole.KING, player2),
+          Piece(Piece.PieceRole.PAWN, player2),
+          Piece(Piece.PieceRole.PAWN, player2)
         ),
         arrayOfNulls(5),
         arrayOfNulls(5),
         arrayOfNulls(5),
         //last row, player 1
         arrayOf<Piece?>(
-          Piece("PAWN", player1),
-          Piece("PAWN", player1),
-          Piece("KING", player1),
-          Piece("PAWN", player1),
-          Piece("PAWN", player1)
+          Piece(Piece.PieceRole.PAWN, player1),
+          Piece(Piece.PieceRole.PAWN, player1),
+          Piece(Piece.PieceRole.KING, player1),
+          Piece(Piece.PieceRole.PAWN, player1),
+          Piece(Piece.PieceRole.PAWN, player1)
         ),
       )
     }
