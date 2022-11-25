@@ -10,6 +10,16 @@ class GameEngine(
   var nextCard = Card.randomCardFromDeck()
   var turn = 1
 
+  constructor(
+    player1: Player,
+    player2: Player,
+    board : Array<Array<Piece?>>,
+    nextCard : Card
+  ) : this(player1, player2) {
+    this.board = board
+    this.nextCard = nextCard
+  }
+
   /**
    * turn++
    */
@@ -49,6 +59,7 @@ class GameEngine(
   }
 
   /**
+   * @author Kosmasu
    * @param from titik asal
    * @param player player yang melakukan move
    * @param card card yang digunakan
@@ -71,7 +82,7 @@ class GameEngine(
   }
 
   /**
-   *
+   * @author Kosmasu
    * @param from titik asal
    * @param to titik tujuan
    * @param player player yang melakukan move
@@ -181,6 +192,17 @@ class GameEngine(
           Piece(Piece.PieceRole.PAWN, player1)
         ),
       )
+    }
+
+    fun clone(other: GameEngine): GameEngine {
+      return GameEngine(
+        other.player1,
+        other.player2,
+        other.board,
+        other.nextCard
+      ).apply {
+        this.turn = other.turn
+      }
     }
   }
 }

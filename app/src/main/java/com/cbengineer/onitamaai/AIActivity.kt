@@ -332,8 +332,64 @@ class AIActivity : AppCompatActivity(){
 
     fun AiThink() {
         // bot
-        val currState = GameState(game.board,player1.cards,player2.cards,game.nextCard)
+//        val currState = GameState(game.board,player1.cards,player2.cards,game.nextCard)
+        val currState = GameEngine(player1,player2,game.board,game.nextCard)
+
+
 
 //        val validMoves = game.getValidMoves()
+    }
+
+    /**
+     * Traverse through nodes using minimax alpha beta pruning.
+     *
+     * When max node, use alpha as value.
+     * When min node, use beta as value.
+     *
+     * @author Xander
+     *
+     * @param   state GameState to expand
+     * @param   alpha alpha score
+     * @param   beta beta score
+     * @param   type NodeType MAX/MIN
+     * @param   maxDepth maximum depth to expand
+     * @return  node score
+     */
+    fun nodeTraverse(state : GameEngine, alpha:Int, beta:Int, type:NodeType, currDepth:Int, maxDepth: Int) : Int{
+
+        if (currDepth == maxDepth) {
+            // evaluate state
+
+        } else if (type == NodeType.MAX) {
+            // max layer
+        } else {
+            // min layer
+        }
+
+        val player = state.getPlayerBasedOnTurn()
+        for (i in state.board.indices) {
+            for (j in state.board[i].indices) {
+                val piece = state.board[i][j]
+                if (piece != null && piece.player == player) {
+                    for (card in player.cards) {
+                        val validMoves = state.getValidMoves(Point(j,i),player,card)
+                        for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
+                            val nextState = GameEngine.clone(state)
+                            nextState.move(Point(j,i),validMove)
+                            nodeTraverse(nextState, alpha, beta, type, currDepth+1, maxDepth)
+                        }
+                    }
+                }
+            }
+        }
+        return 0 // TODO: replace
+    }
+
+//    fun staticBoardEvaluator(state: GameEngine) : Int {
+//
+//    }
+
+    enum class NodeType {
+        MIN, MAX
     }
 }
