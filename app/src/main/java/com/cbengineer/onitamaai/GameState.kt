@@ -31,7 +31,8 @@ data class GameState(
     /**
      * Modified getValidMoves from GameEngine
      * @see GameEngine.getValidMoves
-     * @author Kosmasu, Xander
+     * @author Kosmasu
+     * @author Xander
      * @param from titik asal
      * @param player player yang melakukan move
      * @param card card yang digunakan
@@ -56,7 +57,8 @@ data class GameState(
     /**
      * Modified move from GameEngine
      * @see GameEngine.move
-     * @author Kosmasu, Xander
+     * @author Kosmasu
+     * @author Xander
      * @param from titik asal
      * @param to titik tujuan
      * @param player player yang melakukan move
