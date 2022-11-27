@@ -11,7 +11,7 @@ class Card(
   val nama: String,
   val listPoint: List<Point>,
   val resId: Int,
-) {
+) : Cloneable{
   override fun toString(): String {
     return nama
   }
@@ -23,6 +23,10 @@ class Card(
       else points.add(Point(from.x + (move.x * -1), from.y + (move.y * -1)))
     }
     return points
+  }
+
+  public override fun clone(): Card {
+    return Card(nama, listPoint.toList() , resId)
   }
 
   companion object {

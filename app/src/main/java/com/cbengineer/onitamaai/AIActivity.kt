@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cbengineer.onitamaai.Injections.copy
 import kotlin.math.max
 import kotlin.math.min
 
@@ -341,11 +342,10 @@ class AIActivity : AppCompatActivity(){
     fun AiThink() {
         // bot
 //        val currState = GameState(game.board,player1.cards,player2.cards,game.nextCard)
-        val currState = GameEngine(player1,player2,game.board,game.nextCard)
+        val currState = GameState(game.board,player2,player1,player2.cards,player1.cards,game.nextCard)                         // enter player 2 as protagonist
 
-        val res = nodeTraverse(currState,Int.MIN_VALUE,Int.MAX_VALUE,true,0,3)
-
-        Log.d(TAG, "AiThink: ${res.from} to ${res.to}")
+        val res = nodeTraverse(currState,Int.MIN_VALUE,Int.MAX_VALUE,true,0,1)
+        Log.d(TAG, "AiThink: ${res.from} to ${res.to} using ${res.card.nama}")
     }
 
     /**
@@ -356,10 +356,15 @@ class AIActivity : AppCompatActivity(){
      * @property score score of state
      */
     data class MiniMaxOut(
+        val card: Card,
         val from: Point,
         val to: Point,
         val score: Int
-    )
+    ) {
+        init {
+            Log.d("MiniMaxOut", "MiniMaxOut: $this")
+        }
+    }
 
     /**
      * Traverse through nodes using minimax alpha beta pruning.
@@ -376,75 +381,117 @@ class AIActivity : AppCompatActivity(){
      * @param   maxDepth maximum depth to expand
      * @return  node score
      */
-    fun nodeTraverse(state : GameEngine, alpha:Int, beta:Int, isMaxLayer:Boolean, currDepth:Int, maxDepth: Int, moveFrom:Point? = null, moveTo:Point? = null) : MiniMaxOut{
-
+    fun nodeTraverse(state : GameState, alpha:Int, beta:Int, isMaxLayer:Boolean, currDepth:Int, maxDepth: Int, cardUsed: Card? = null, moveFrom:Point? = null, moveTo:Point? = null) : MiniMaxOut{
+        Log.d(TAG, "nodeTraverse: depth $currDepth")
         if (currDepth == maxDepth) {
             // evaluate state
-            if (moveTo != null && moveFrom != null) {
-                return MiniMaxOut(moveFrom, moveTo, staticBoardEvaluator(state))
+            Log.d(TAG, "nodeTraverse: SBE reached")
+            if (cardUsed != null && moveTo != null && moveFrom != null) {
+                return MiniMaxOut(cardUsed,moveFrom, moveTo, staticBoardEvaluator(state))
             } else {
                 throw KotlinNullPointerException("null move")
             }
         } else if (isMaxLayer) {
             // max layer
             var bestScore = Int.MIN_VALUE
+            lateinit var bestCard : Card
             lateinit var bestMoveFrom : Point
             lateinit var bestMoveTo : Point
 
-            val player = state.getPlayerBasedOnTurn()
+            val player = state.player
             outest@
             for (i in state.board.indices) {
                 for (j in state.board[i].indices) {
                     val piece = state.board[i][j]
                     if (piece != null && piece.player == player) {
-                        for (card in player.cards) {
+                        for (card in state.playerCards) {
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
-                                val nextState = GameEngine.clone(state)
+                                val playerCards = arrayListOf<Card>().apply { addAll(state.playerCards) }
+                                val selectedCardIndex = state.playerCards.indexOf(card)
+                                playerCards[selectedCardIndex] = nextCard
+                                val nextState = state.copy(
+                                    board = state.board.copy(),
+                                    player = state.player,
+                                    opponent = state.opponent,
+                                    playerCards = playerCards,
+                                    opponentCards = state.opponentCards,
+                                    nextCard = card
+                                )
                                 nextState.move(Point(j,i),validMove)
-                                val res = nodeTraverse(nextState, alpha, beta, false, currDepth+1, maxDepth, Point(j,i), validMove)
-                                bestMoveFrom = res.from
-                                bestMoveTo = res.to
-                                bestScore = max(bestScore, res.score)
+                                Log.d(TAG, "nodeTraverse: board state")
+                                nextState.printBoard()
+                                val res = nodeTraverse(nextState, alpha, beta, false, currDepth+1, maxDepth, card, Point(j,i), validMove)
+                                // TODO: alpha not refreshing?
+//                                bestScore = max(bestScore, res.score)
+                                if (res.score > bestScore) {
+                                    bestScore = res.score
+//                                    bestMoveFrom = res.from
+//                                    bestMoveTo = res.to
+                                    bestCard = card
+                                    bestMoveFrom = Point(j,i)
+                                    bestMoveTo = validMove
+                                }
                                 val newAlpha = max(alpha, bestScore)
                                 // Alpha Beta Pruning
                                 if (beta <= newAlpha) break@outest
+                                // Cap break
+                                if (bestScore >= Int.MAX_VALUE) break@outest
                             }
                         }
                     }
                 }
             }
-            return MiniMaxOut(bestMoveFrom,bestMoveTo,bestScore)
+            return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         } else {
             // min layer
             var bestScore = Int.MAX_VALUE
+            lateinit var bestCard : Card
             lateinit var bestMoveFrom : Point
             lateinit var bestMoveTo : Point
 
-            val player = state.getPlayerBasedOnTurn()
+            val player = state.opponent
             outest@
             for (i in state.board.indices) {
                 for (j in state.board[i].indices) {
                     val piece = state.board[i][j]
                     if (piece != null && piece.player == player) {
-                        for (card in player.cards) {
+                        for (card in state.opponentCards) {
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
-                                val nextState = GameEngine.clone(state)
+                                val opponentCards = arrayListOf<Card>().apply { addAll(state.opponentCards) }
+                                val selectedCardIndex = state.opponentCards.indexOf(card)
+                                opponentCards[selectedCardIndex] = nextCard
+                                val nextState = state.copy(
+                                    board = state.board.copy(),
+                                    player = state.player,
+                                    opponent = state.opponent,
+                                    playerCards = state.playerCards,
+                                    opponentCards = opponentCards,
+                                    nextCard = card
+                                )
                                 nextState.move(Point(j,i),validMove)
-                                val res = nodeTraverse(nextState, alpha, beta, true, currDepth+1, maxDepth, Point(j,i), validMove)
-                                bestMoveFrom = res.from
-                                bestMoveTo = res.to
-                                bestScore = min(bestScore, res.score)
+                                val res = nodeTraverse(nextState, alpha, beta, true, currDepth+1, maxDepth, card, Point(j,i), validMove)
+//                                bestScore = min(bestScore, res.score)
+                                if (res.score < bestScore) {
+                                    bestScore = res.score
+//                                    bestMoveFrom = res.from
+//                                    bestMoveTo = res.to
+                                    bestCard = card
+                                    bestMoveFrom = Point(j,i)
+                                    bestMoveTo = validMove
+                                }
                                 val newBeta = min(beta, bestScore)
                                 // Alpha Beta Pruning
                                 if (newBeta <= alpha) break@outest
+                                // Cap break
+                                if (bestScore <= Int.MIN_VALUE) break@outest
                             }
                         }
                     }
                 }
             }
-            return MiniMaxOut(bestMoveFrom,bestMoveTo,bestScore)
+            return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         }
 
     }
@@ -457,12 +504,12 @@ class AIActivity : AppCompatActivity(){
      * threatened by pawn -1 ea
      * no king = lose
      *
-     * @param state GameEngine as state
+     * @param state GameState
      * @return State score
      */
-    fun staticBoardEvaluator(state: GameEngine) : Int {
-        val player = state.getPlayerBasedOnTurn()
-        val opponent = state.getOpponentBasedOnTurn()
+    fun staticBoardEvaluator(state: GameState) : Int {
+        val player = state.player
+        val opponent = state.opponent
         var playerHasKing = false
         var opponentHasKing = false
         var playerScore = 0

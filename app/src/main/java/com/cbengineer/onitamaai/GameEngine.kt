@@ -7,7 +7,7 @@ class GameEngine(
   val player2: Player,
 ) {
   var board = createBoard(player1, player2)
-  var nextCard = Card.randomCardFromDeck()
+  var nextCard : Card = Card.randomCardFromDeck()
   var turn = 1
 
   constructor(
@@ -28,6 +28,7 @@ class GameEngine(
   }
 
   /**
+   * @author Kosmasu
    * @return player1 jika turn ganjil, player2 jika turn genap
    */
   fun getPlayerBasedOnTurn(): Player {
@@ -38,6 +39,7 @@ class GameEngine(
   }
 
   /**
+   * @author Kosmasu
    * @return player2 jika turn ganjil, player1 jika turn genap
    */
   fun getOpponentBasedOnTurn(): Player {
