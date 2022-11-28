@@ -147,6 +147,7 @@ class AIActivity : AppCompatActivity(){
                         // pengecekan menang
                         if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
                             showMessageMenang(game.getPlayerBasedOnTurn())
+                            // TODO: stop AI think
                         }
                         endTurn()
                         if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
@@ -392,7 +393,7 @@ class AIActivity : AppCompatActivity(){
             if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
                 showMessageMenang(game.getPlayerBasedOnTurn())
                 Log.d(TAG, "AiThink: WIN")
-            } // FIXME: win by takeover? test pls
+            } // FIXME: player win by takeover? test pls
             endTurn()
             if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
                 selectedCard = null
