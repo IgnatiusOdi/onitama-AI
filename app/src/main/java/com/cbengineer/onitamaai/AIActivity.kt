@@ -42,6 +42,7 @@ class AIActivity : AppCompatActivity(){
     var selectedCard: Card? = null
     var selectedTile: ImageButton? = null
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -181,7 +182,8 @@ class AIActivity : AppCompatActivity(){
     }
 
     fun showMessageMenang(player: Player) {
-        tvMessage.text = "${player.nama} Won!"
+//        tvMessage.text = "${player.nama} Won!"
+        tvMessage.text = String.format(getString(R.string.win_msg),player.nama)
         if (player.order == Player.ORDER_PLAYER1) {
             tvMessage.setTextColor(ContextCompat.getColor(this, R.color.blue))
         }
@@ -191,6 +193,7 @@ class AIActivity : AppCompatActivity(){
         llMessageParent.isVisible = true
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun endTurn() {
         game.endTurn()
         selectedCard = null
@@ -472,7 +475,7 @@ class AIActivity : AppCompatActivity(){
                 for (j in state.board[i].indices) {
                     val piece = state.board[i][j]
                     if (piece != null && piece.player == player) {
-                        for (card in state.playerCards) {
+                        for (card in state.playerCards) { // TODO: no valid move discard
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
                                 val playerCards = arrayListOf<Card>().apply { addAll(state.playerCards) }
@@ -492,7 +495,7 @@ class AIActivity : AppCompatActivity(){
                                 nextState.printBoard()
 
                                 val res = nodeTraverse(nextState, newAlpha, beta, false, currDepth+1, maxDepth, card, Point(j,i), validMove)
-                                if (res.score > bestScore) {
+                                if (res.score >= bestScore) {
                                     bestScore = res.score
                                     bestCard = card
                                     bestMoveFrom = Point(j,i)
@@ -539,7 +542,7 @@ class AIActivity : AppCompatActivity(){
                                 )
                                 nextState.move(Point(j,i),validMove)
                                 val res = nodeTraverse(nextState, alpha, newBeta, true, currDepth+1, maxDepth, card, Point(j,i), validMove)
-                                if (res.score < bestScore) {
+                                if (res.score <= bestScore) {
                                     bestScore = res.score
                                     bestCard = card
                                     bestMoveFrom = Point(j,i)

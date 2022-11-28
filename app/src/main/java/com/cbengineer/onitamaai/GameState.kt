@@ -1,7 +1,5 @@
 package com.cbengineer.onitamaai
 
-import java.lang.reflect.Array.get
-
 data class GameState(
     val board : Array<Array<Piece?>>,
     val player: Player,
@@ -43,8 +41,6 @@ data class GameState(
      * @author Xander
      * @param from titik asal
      * @param to titik tujuan
-     * @param player player yang melakukan move
-     * @param card card yang digunakan
      */
     fun move(from: Point, to: Point) {
         board[to.y][to.x] = board[from.y][from.x]

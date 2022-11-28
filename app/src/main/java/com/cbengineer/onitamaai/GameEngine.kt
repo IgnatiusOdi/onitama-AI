@@ -87,8 +87,6 @@ class GameEngine(
    * @author Kosmasu
    * @param from titik asal
    * @param to titik tujuan
-   * @param player player yang melakukan move
-   * @param card card yang digunakan
    */
   fun move(from: Point, to: Point) {
     board[to.y][to.x] = board[from.y][from.x]

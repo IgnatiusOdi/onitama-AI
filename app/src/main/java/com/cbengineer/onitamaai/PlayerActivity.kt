@@ -1,5 +1,6 @@
 package com.cbengineer.onitamaai
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -35,6 +36,7 @@ class PlayerActivity : AppCompatActivity() {
   var selectedCard: Card? = null
   var selectedTile: ImageButton? = null
 
+  @SuppressLint("NotifyDataSetChanged")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_player)
@@ -173,7 +175,8 @@ class PlayerActivity : AppCompatActivity() {
   }
 
   fun showMessageMenang(player: Player) {
-    tvMessage.text = "${player.nama} Won!"
+//    tvMessage.text = "${player.nama} Won!"
+    tvMessage.text = String.format(getString(R.string.win_msg),player.nama)
     if (player.order == Player.ORDER_PLAYER1) {
       tvMessage.setTextColor(ContextCompat.getColor(this, R.color.blue))
     }
@@ -183,6 +186,7 @@ class PlayerActivity : AppCompatActivity() {
     llMessageParent.isVisible = true
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   fun endTurn() {
     game.endTurn()
     selectedCard = null

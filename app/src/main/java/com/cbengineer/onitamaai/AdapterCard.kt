@@ -1,11 +1,11 @@
 package com.cbengineer.onitamaai
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
@@ -62,6 +62,7 @@ class AdapterCard(
     return CustomViewHolder(LayoutInflater.from(context).inflate(R.layout.card, parent, false))
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
     val item = listCard[position]
     val from = Point(2, 2)
@@ -76,9 +77,10 @@ class AdapterCard(
       holder.tiles[point.y][point.x].setBackgroundResource(R.drawable.card_tile_valid_move)
     }
     if (item != gameEngine.nextCard)
-      holder.tvNamaCard.setText(item.nama)
+      holder.tvNamaCard.text = item.nama
     else
-      holder.tvNamaCard.setText("${item.nama} (played)")
+//      holder.tvNamaCard.setText("${item.nama} (played)")
+      holder.tvNamaCard.text = String.format(context.getString(R.string.played_card),item.nama)
     if (isCardSelected(item)) {
       holder.itemView.setBackgroundResource(R.drawable.card_parent_selected)
     }
