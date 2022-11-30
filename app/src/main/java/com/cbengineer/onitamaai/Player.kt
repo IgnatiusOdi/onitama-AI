@@ -12,7 +12,7 @@ class Player(
   }
 
   companion object {
-    val ORDER_PLAYER1 = 1
-    val ORDER_PLAYER2 = 2
+    const val ORDER_PLAYER1 = 1
+    const val ORDER_PLAYER2 = 2
   }
 }

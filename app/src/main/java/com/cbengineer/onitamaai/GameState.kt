@@ -1,5 +1,7 @@
 package com.cbengineer.onitamaai
 
+import android.util.Log
+
 data class GameState(
     val board : Array<Array<Piece?>>,
     val player: Player,
@@ -47,7 +49,8 @@ data class GameState(
         board[from.y][from.x] = null
     }
 
-    fun printBoard() {
+    fun printBoard(logMode : Boolean = false) : String {
+        val out = StringBuilder()
         for (row in this.board) {
             var str = ""
             for (col in row) {
@@ -56,8 +59,23 @@ data class GameState(
                     else -> col.toString()
                 }
             }
-            println(str)
+            if (logMode)
+                Log.d("GameState", "printBoard: $str")
+            else
+                println(str)
+            out.appendLine(str)
         }
+        return out.toString()
+    }
+
+    override fun toString(): String {
+        val out = StringBuilder()
+        out.append("Board:\n")
+        out.append(printBoard())
+        out.appendLine("playerCards (${player.nama}): ${playerCards[0]}, ${playerCards[1]}")
+        out.appendLine("opponentCards (${opponent.nama}): ${opponentCards[0]}, ${opponentCards[1]}")
+        out.appendLine("nextCaard: $nextCard")
+        return out.toString()
     }
 
     override fun equals(other: Any?): Boolean {

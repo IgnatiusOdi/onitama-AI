@@ -148,18 +148,19 @@ class AIActivity : AppCompatActivity(){
                         // pengecekan menang
                         if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
                             showMessageMenang(game.getPlayerBasedOnTurn())
-                            // TODO: stop AI think
-                        }
-                        endTurn()
-                        if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
-                            selectedCard = null
-                            if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1)
-                                rvDiscardCard.adapter = adapterDeckPlayer1
-                            else
-                                rvDiscardCard.adapter = adapterDeckPlayer2
-//              adapterDeckPlayer1.notifyDataSetChanged()
-//              adapterDeckPlayer2.notifyDataSetChanged()
-                            llDiscardCardParent.visibility = View.VISIBLE
+                            // stop AI think
+                        } else {
+                            endTurn()
+                            if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
+                                selectedCard = null
+                                if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1)
+                                    rvDiscardCard.adapter = adapterDeckPlayer1
+                                else
+                                    rvDiscardCard.adapter = adapterDeckPlayer2
+    //              adapterDeckPlayer1.notifyDataSetChanged()
+    //              adapterDeckPlayer2.notifyDataSetChanged()
+                                llDiscardCardParent.visibility = View.VISIBLE
+                            }
                         }
                     }
                     else {
@@ -475,8 +476,12 @@ class AIActivity : AppCompatActivity(){
                 for (j in state.board[i].indices) {
                     val piece = state.board[i][j]
                     if (piece != null && piece.player == player) {
+                        var validMoveExist = false
                         for (card in state.playerCards) { // TODO: no valid move discard
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
+                            if (validMoves.size > 0) {
+                                validMoveExist = true
+                            }
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
                                 val playerCards = arrayListOf<Card>().apply { addAll(state.playerCards) }
                                 val selectedCardIndex = state.playerCards.indexOf(card)
@@ -492,7 +497,8 @@ class AIActivity : AppCompatActivity(){
                                 nextState.move(Point(j,i),validMove)
 
                                 Log.d(TAG, "nodeTraverse: board state")
-                                nextState.printBoard()
+                                Log.d(TAG, "nodeTraverse: $nextState")
+//                                nextState.printBoard(true)
 
                                 val res = nodeTraverse(nextState, newAlpha, beta, false, currDepth+1, maxDepth, card, Point(j,i), validMove)
                                 if (res.score >= bestScore) {
@@ -508,9 +514,14 @@ class AIActivity : AppCompatActivity(){
                                 if (bestScore >= Int.MAX_VALUE) break@outest
                             }
                         }
+                        if (!validMoveExist) {
+                            Log.d(TAG, "nodeTraverse: no valid move!")
+                            return MiniMaxOut(cardUsed,moveFrom,moveTo,staticBoardEvaluator(state))
+                        }
                     }
                 }
             }
+            Log.d(TAG, "nodeTraverse: Best from this max node:")
             return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         } else {
             // min layer
@@ -541,6 +552,11 @@ class AIActivity : AppCompatActivity(){
                                     nextCard = card
                                 )
                                 nextState.move(Point(j,i),validMove)
+
+                                Log.d(TAG, "nodeTraverse: board state")
+                                Log.d(TAG, "nodeTraverse: $nextState")
+//                                nextState.printBoard(true)
+
                                 val res = nodeTraverse(nextState, alpha, newBeta, true, currDepth+1, maxDepth, card, Point(j,i), validMove)
                                 if (res.score <= bestScore) {
                                     bestScore = res.score
@@ -558,15 +574,16 @@ class AIActivity : AppCompatActivity(){
                     }
                 }
             }
+            Log.d(TAG, "nodeTraverse: best from this min node:")
             return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         }
     }
 
     /**
      * SBE
-     * pawn exist +2 ea
+     * pawn exist +5 ea
      * threaten pawn +1 ea
-     * threaten king +3
+     * threaten king +4
      * protecting + 1 ea
      *
      * win/lose:
@@ -598,7 +615,7 @@ class AIActivity : AppCompatActivity(){
                                 return Int.MAX_VALUE
                             }
                         } else {
-                            playerScore += 2                                                        // exists score
+                            playerScore += 5                                                        // exists score
                         }
                         for (card in player.cards) {
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
@@ -606,7 +623,7 @@ class AIActivity : AppCompatActivity(){
                                 val target = state.board[validMove.y][validMove.x]
                                 if (target != null) {
                                     if (target.role == Piece.PieceRole.KING) {
-                                        playerScore += 3                                            // threaten king
+                                        playerScore += 4                                            // threaten king
                                     } else {
                                         playerScore++                                               // protecting or threaten
                                     }
@@ -622,7 +639,7 @@ class AIActivity : AppCompatActivity(){
                                 return Int.MIN_VALUE
                             }
                         } else {
-                            opponentScore += 2                                                      // exist score
+                            opponentScore += 5                                                      // exist score
                         }
                         for (card in opponent.cards) {
                             val validMoves = state.getValidMoves(Point(j,i),opponent,card)
@@ -630,7 +647,7 @@ class AIActivity : AppCompatActivity(){
                                 val target = state.board[validMove.y][validMove.x]
                                 if (target != null) {
                                     if (target.role == Piece.PieceRole.KING) {
-                                        opponentScore += 3                                            // threaten king
+                                        opponentScore += 4                                            // threaten king
                                     } else {
                                         opponentScore++                                               // protecting or threaten
                                     }
@@ -641,9 +658,9 @@ class AIActivity : AppCompatActivity(){
                 }
             }
         }
-        return if (!playerHasKing) {                                                                // win check
+        return if (!playerHasKing) {                                                                // lose check
             Int.MIN_VALUE
-        } else if (!opponentHasKing) {                                                              // lose check
+        } else if (!opponentHasKing) {                                                              // win check
             Int.MAX_VALUE
         } else {
             playerScore - opponentScore
