@@ -453,12 +453,12 @@ class AIActivity : AppCompatActivity(){
      * @return  node score
      */
     fun nodeTraverse(state : GameState, alpha:Int, beta:Int, isMaxLayer:Boolean, currDepth:Int, maxDepth: Int, cardUsed: Card? = null, moveFrom:Point? = null, moveTo:Point? = null) : MiniMaxOut{
-        Log.d(TAG, "nodeTraverse: depth $currDepth")
+        Log.d(TAG, "nodeTraverse: start node depth $currDepth")
         if (currDepth == maxDepth) {
             // evaluate state
             Log.d(TAG, "nodeTraverse: SBE reached")
             if (cardUsed != null && moveTo != null && moveFrom != null) {
-                return MiniMaxOut(cardUsed,moveFrom, moveTo, staticBoardEvaluator(state))
+                return MiniMaxOut(cardUsed,moveFrom, moveTo, stateBoardEvaluator(state))
             } else {
                 throw KotlinNullPointerException("null move")
             }
@@ -469,6 +469,7 @@ class AIActivity : AppCompatActivity(){
             var bestMoveFrom : Point? = moveFrom
             var bestMoveTo : Point? = moveTo
             var newAlpha = alpha
+            var validMoveExist = false
 
             val player = state.player
             outest@
@@ -476,7 +477,6 @@ class AIActivity : AppCompatActivity(){
                 for (j in state.board[i].indices) {
                     val piece = state.board[i][j]
                     if (piece != null && piece.player == player) {
-                        var validMoveExist = false
                         for (card in state.playerCards) { // TODO: no valid move discard
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
                             if (validMoves.size > 0) {
@@ -501,7 +501,7 @@ class AIActivity : AppCompatActivity(){
 //                                nextState.printBoard(true)
 
                                 val res = nodeTraverse(nextState, newAlpha, beta, false, currDepth+1, maxDepth, card, Point(j,i), validMove)
-                                if (res.score >= bestScore) {
+                                if (res.score >= bestScore || (bestMoveTo == null && bestMoveFrom == null && bestCard == null )) {
                                     bestScore = res.score
                                     bestCard = card
                                     bestMoveFrom = Point(j,i)
@@ -514,12 +514,12 @@ class AIActivity : AppCompatActivity(){
                                 if (bestScore >= Int.MAX_VALUE) break@outest
                             }
                         }
-                        if (!validMoveExist) {
-                            Log.d(TAG, "nodeTraverse: no valid move!")
-                            return MiniMaxOut(cardUsed,moveFrom,moveTo,staticBoardEvaluator(state))
-                        }
                     }
                 }
+            }
+            if (!validMoveExist) {
+                Log.d(TAG, "nodeTraverse: no valid move!")
+                return MiniMaxOut(cardUsed,moveFrom,moveTo,stateBoardEvaluator(state))
             }
             Log.d(TAG, "nodeTraverse: Best from this max node:")
             return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
@@ -530,6 +530,7 @@ class AIActivity : AppCompatActivity(){
             var bestMoveFrom : Point? = moveFrom
             var bestMoveTo : Point? = moveTo
             var newBeta = beta
+            var validMoveExist = false
 
             val player = state.opponent
             outest@
@@ -539,6 +540,9 @@ class AIActivity : AppCompatActivity(){
                     if (piece != null && piece.player == player) {
                         for (card in state.opponentCards) {
                             val validMoves = state.getValidMoves(Point(j,i),player,card)
+                            if (validMoves.size > 0) {
+                                validMoveExist = true
+                            }
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
                                 val opponentCards = arrayListOf<Card>().apply { addAll(state.opponentCards) }
                                 val selectedCardIndex = state.opponentCards.indexOf(card)
@@ -558,7 +562,7 @@ class AIActivity : AppCompatActivity(){
 //                                nextState.printBoard(true)
 
                                 val res = nodeTraverse(nextState, alpha, newBeta, true, currDepth+1, maxDepth, card, Point(j,i), validMove)
-                                if (res.score <= bestScore) {
+                                if (res.score <= bestScore  || (bestMoveTo == null && bestMoveFrom == null && bestCard == null )) {
                                     bestScore = res.score
                                     bestCard = card
                                     bestMoveFrom = Point(j,i)
@@ -569,12 +573,17 @@ class AIActivity : AppCompatActivity(){
                                 if (newBeta <= alpha) break@outest
                                 // Cap break
                                 if (bestScore <= Int.MIN_VALUE) break@outest
+                                if (bestScore <= Int.MIN_VALUE) Log.d(TAG, "nodeTraverse: cap break")
                             }
                         }
                     }
                 }
             }
-            Log.d(TAG, "nodeTraverse: best from this min node:")
+            if (!validMoveExist) {
+                Log.d(TAG, "nodeTraverse: no valid move!")
+                return MiniMaxOut(cardUsed,moveFrom,moveTo,stateBoardEvaluator(state))
+            }
+            Log.d(TAG, "nodeTraverse: best from this depth $currDepth min node:")
             return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         }
     }
@@ -585,6 +594,7 @@ class AIActivity : AppCompatActivity(){
      * threaten pawn +1 ea
      * threaten king +4
      * protecting + 1 ea
+     * + (7 - distance) * 2
      *
      * win/lose:
      * no king = lose
@@ -593,7 +603,7 @@ class AIActivity : AppCompatActivity(){
      * @param state GameState
      * @return State score
      */
-    fun staticBoardEvaluator(state: GameState) : Int {
+    fun stateBoardEvaluator(state: GameState) : Int {
         val player = state.player
         val opponent = state.opponent
         var playerHasKing = false
@@ -610,9 +620,11 @@ class AIActivity : AppCompatActivity(){
                         // player
                         if (piece.role == Piece.PieceRole.KING) {
                             playerHasKing = true
-                            if (Point(j,i) == GameEngine.PLAYER1_BASE) {
+                            if (Point(j, i) == GameEngine.PLAYER1_BASE) {
                                 // win by takeover
                                 return Int.MAX_VALUE
+                            } else {
+                                playerScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER1_BASE)) * 2 // distance to enemy base
                             }
                         } else {
                             playerScore += 5                                                        // exists score
@@ -637,6 +649,8 @@ class AIActivity : AppCompatActivity(){
                             if (Point(j,i) == GameEngine.PLAYER2_BASE) {
                                 // lose by takeover
                                 return Int.MIN_VALUE
+                            } else {
+                                opponentScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER2_BASE)) * 2  // distance to enemy base
                             }
                         } else {
                             opponentScore += 5                                                      // exist score
