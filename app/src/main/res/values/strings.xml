@@ -2,11 +2,15 @@
     <string name="app_name">Onitama AI</string>
     <string name="win_msg">%s Won!</string>
     <string name="created_by">
-        CREATED BY :\n\n
-        Alexander Kevin 220116902\n
-        Ignatius Odi 220116919\n
-        Kenny 220116925\n\n
-        AI PROJECT - ISTTS
+        Created By :\n\n
+        220116902 - Alexander Kevin\n
+        220116919 - Ignatius Odi\n
+        220116925 - Kenny\n\n
+        Artificial Intelligence Class Project\n
+        ISTTS\n
     </string>
+    <string name="kevin">220116902 - Alexander Kevin</string>
+    <string name="odi">220116919 - Ignatius Odi</string>
+    <string name="kenny">220116925 - Kenny</string>
     <string name="played_card">%s (played)</string>
 </resources>
