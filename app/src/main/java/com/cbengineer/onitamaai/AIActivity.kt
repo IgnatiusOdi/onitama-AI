@@ -6,11 +6,15 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cbengineer.onitamaai.Injections.copy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,6 +35,9 @@ class AIActivity : AppCompatActivity(){
     lateinit var tvTurn: TextView
     var tiles: Array<Array<ImageButton>> = arrayOf()
 
+    lateinit var llBoard: LinearLayout
+    lateinit var clParent: ConstraintLayout
+
     lateinit var nextCard: Card
     lateinit var player1: Player
     lateinit var player2: Player
@@ -41,6 +48,8 @@ class AIActivity : AppCompatActivity(){
 
     var selectedCard: Card? = null
     var selectedTile: ImageButton? = null
+
+    val coroutine = CoroutineScope(Dispatchers.IO)
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +74,9 @@ class AIActivity : AppCompatActivity(){
         llMessageParent = findViewById(R.id.llMessageParent)
         tvMessage = findViewById(R.id.tvMessage)
         btnBackToMenu = findViewById(R.id.btnBackToMenu)
+
+        clParent = findViewById(R.id.clParent)
+        llBoard = findViewById(R.id.llBoard)
 
         btnBackToMenu.setOnClickListener {
             finish()
@@ -199,7 +211,7 @@ class AIActivity : AppCompatActivity(){
         game.endTurn()
         selectedCard = null
         selectedTile = null
-        tvTurn.text = getTurnText()
+        tvTurn.setText(getTurnText())
         if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1) {
             // player 1
             tvTurn.setTextColor(ContextCompat.getColor(this, R.color.blue))
@@ -208,11 +220,19 @@ class AIActivity : AppCompatActivity(){
             // player 2
             tvTurn.setTextColor(ContextCompat.getColor(this, R.color.red))
             adapterDeckPlayer1.notifyDataSetChanged()
-            AiThink(4)                                                                     // set depth here
+            clParent.invalidate()
+//            llBoard.isEnabled = false
+            coroutine.launch {
+              AiThink(4)                                                                     // set depth here
+            }
         }
     }
 
     fun onTileClicked(tile: ImageButton, from: Point) {
+        val piece: Piece? = tile.getTag(R.id.TAG_TILE) as Piece?
+        if (piece != null && piece.player == player2) {
+            return
+        }
         // set selectedTile sebelumnya jadi default
         selectedTile?.let {
             val point: Point = it.getTag(R.id.TAG_POINT) as Point
@@ -227,7 +247,7 @@ class AIActivity : AppCompatActivity(){
             }
         }
 //    selectedTile?.setBackgroundResource(R.drawable.tile_default)
-        val piece: Piece? = tile.getTag(R.id.TAG_TILE) as Piece?
+//        val piece: Piece? = tile.getTag(R.id.TAG_TILE) as Piece?
         // kalau selectedTile yang sebelumnya sama dengan tile yang di click sekarang
         if (selectedTile == tile) {
             // unset, lalu unhighlight valid moves
@@ -345,7 +365,7 @@ class AIActivity : AppCompatActivity(){
         return "${game.getPlayerBasedOnTurn().nama}'s Turn"
     }
 
-    fun AiThink(maxDepth: Int) {
+    suspend fun AiThink(maxDepth: Int) {
         // bot
         val currState = GameState(game.board,player2,player1,player2.cards,player1.cards,game.nextCard)                         // enter player 2 as protagonist
 
@@ -369,48 +389,53 @@ class AIActivity : AppCompatActivity(){
             player.cards.add(game.nextCard)
             val addIndex = player.cards.indexOf(game.nextCard)
             game.nextCard = res.card
-            if (game.turn % 2 != 1) {
-                // player 2 turn
-                adapterDeckPlayer1.notifyItemRemoved(removeIndex) // opponent
-                adapterDeckPlayer2.notifyItemInserted(addIndex) // player
-            }
 
-            // reset tag valid move
-            tileLama.setTag(R.id.TAG_VALID_MOVE, false)
-            tileBaru.setTag(R.id.TAG_VALID_MOVE, false)
+            this.runOnUiThread {
+                if (game.turn % 2 != 1) {
+                  // player 2 turn
+                  adapterDeckPlayer1.notifyItemRemoved(removeIndex) // opponent
+                  adapterDeckPlayer2.notifyItemInserted(addIndex) // player
+                }
 
-            // set tag tile baru
-            tileBaru.setTag(R.id.TAG_TILE, tileLama.getTag(R.id.TAG_TILE))
-            tileLama.setTag(R.id.TAG_TILE, null)
+                // reset tag valid move
+                tileLama.setTag(R.id.TAG_VALID_MOVE, false)
+                tileBaru.setTag(R.id.TAG_VALID_MOVE, false)
 
-            // reset gambar pion/king
-            tileBaru.setImageResource(piece.getDrawable())
-            tileLama.setImageDrawable(null)
+                // set tag tile baru
+                tileBaru.setTag(R.id.TAG_TILE, tileLama.getTag(R.id.TAG_TILE))
+                tileLama.setTag(R.id.TAG_TILE, null)
 
-            //reset background
-            tileBaru.setBackgroundResource(R.drawable.tile_default)
-            tileLama.setBackgroundResource(R.drawable.tile_default)
-            tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
-            tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
+                // reset gambar pion/king
+                tileBaru.setImageResource(piece.getDrawable())
+                tileLama.setImageDrawable(null)
 
-            // pengecekan menang
-            if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
-                showMessageMenang(game.getPlayerBasedOnTurn())
-                Log.d(TAG, "AiThink: WIN")
-            } // FIXME: player win by takeover? test pls
-            endTurn()
-            if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
-                selectedCard = null
-                if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1)
+                //reset background
+                tileBaru.setBackgroundResource(R.drawable.tile_default)
+                tileLama.setBackgroundResource(R.drawable.tile_default)
+                tiles[GameEngine.PLAYER1_BASE.y][GameEngine.PLAYER1_BASE.x].setBackgroundResource(R.drawable.tile_base_blue)
+                tiles[GameEngine.PLAYER2_BASE.y][GameEngine.PLAYER2_BASE.x].setBackgroundResource(R.drawable.tile_base_red)
+
+                // pengecekan menang
+                if (game.checkIfWin(game.getPlayerBasedOnTurn())) {
+                  showMessageMenang(game.getPlayerBasedOnTurn())
+                  Log.d(TAG, "AiThink: WIN")
+                } // FIXME: player win by takeover? test pls
+                endTurn()
+                if (!game.checkLegalMovesExist(game.getPlayerBasedOnTurn())) {
+                  selectedCard = null
+                  if (game.getPlayerBasedOnTurn().order == Player.ORDER_PLAYER1)
                     rvDiscardCard.adapter = adapterDeckPlayer1
-                else
+                  else
                     rvDiscardCard.adapter = adapterDeckPlayer2
-//              adapterDeckPlayer1.notifyDataSetChanged()
-//              adapterDeckPlayer2.notifyDataSetChanged()
-                llDiscardCardParent.visibility = View.VISIBLE
+    //              adapterDeckPlayer1.notifyDataSetChanged()
+    //              adapterDeckPlayer2.notifyDataSetChanged()
+                  llDiscardCardParent.visibility = View.VISIBLE
+                }
             }
         } else {
-            Toast.makeText(this, "No Valid Move", Toast.LENGTH_SHORT).show()
+            this.runOnUiThread {
+              Toast.makeText(this, "No Valid Move", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
