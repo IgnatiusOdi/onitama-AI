@@ -223,7 +223,7 @@ class AIActivity : AppCompatActivity(){
             clParent.invalidate()
 //            llBoard.isEnabled = false
             coroutine.launch {
-              AiThink(4)                                                                     // set depth here
+              AiThink(3)                                                                     // set depth here
             }
         }
     }
@@ -368,6 +368,7 @@ class AIActivity : AppCompatActivity(){
     suspend fun AiThink(maxDepth: Int) {
         // bot
         val currState = GameState(game.board,player2,player1,player2.cards,player1.cards,game.nextCard)                         // enter player 2 as protagonist
+        Log.d(TAG, "AiThink: init state $currState")
 
         val res = nodeTraverse(currState,Int.MIN_VALUE,Int.MAX_VALUE,true,0,maxDepth)  // traverse possibility using minimax alpha beta pruning
 
@@ -508,9 +509,11 @@ class AIActivity : AppCompatActivity(){
                                 validMoveExist = true
                             }
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
+                                // swap card
                                 val playerCards = arrayListOf<Card>().apply { addAll(state.playerCards) }
-                                val selectedCardIndex = state.playerCards.indexOf(card)
-                                playerCards[selectedCardIndex] = nextCard
+                                val selectedCardIndex = state.playerCards.indexOf(state.playerCards.find { it.nama == card.nama })
+                                playerCards[selectedCardIndex] = state.nextCard
+
                                 val nextState = state.copy(
                                     board = state.board.copy(),
                                     player = state.player,
@@ -546,7 +549,7 @@ class AIActivity : AppCompatActivity(){
                 Log.d(TAG, "nodeTraverse: no valid move!")
                 return MiniMaxOut(cardUsed,moveFrom,moveTo,stateBoardEvaluator(state))
             }
-            Log.d(TAG, "nodeTraverse: Best from this max node:")
+            Log.d(TAG, "nodeTraverse: Best from this depth $currDepth max node:")
             return MiniMaxOut(bestCard,bestMoveFrom,bestMoveTo,bestScore)
         } else {
             // min layer
@@ -570,8 +573,8 @@ class AIActivity : AppCompatActivity(){
                             }
                             for (validMove in validMoves) {                                                  // for every valid move in every piece, branch off
                                 val opponentCards = arrayListOf<Card>().apply { addAll(state.opponentCards) }
-                                val selectedCardIndex = state.opponentCards.indexOf(card)
-                                opponentCards[selectedCardIndex] = nextCard
+                                val selectedCardIndex = state.opponentCards.indexOf(state.opponentCards.find { it.nama == card.nama })
+                                opponentCards[selectedCardIndex] = state.nextCard
                                 val nextState = state.copy(
                                     board = state.board.copy(),
                                     player = state.player,
@@ -616,9 +619,9 @@ class AIActivity : AppCompatActivity(){
     /**
      * SBE
      * pawn exist +5 ea
-     * threaten pawn +1 ea
-     * threaten king +4
-     * protecting + 1 ea
+     * threaten pawn +3 ea
+     * threaten king +5
+     * protecting + 3 ea
      * + (7 - distance) * 2
      *
      * win/lose:
@@ -649,7 +652,7 @@ class AIActivity : AppCompatActivity(){
                                 // win by takeover
                                 return Int.MAX_VALUE
                             } else {
-                                playerScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER1_BASE)) * 2 // distance to enemy base
+                                playerScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER1_BASE)) * 3 // distance to enemy base
                             }
                         } else {
                             playerScore += 5                                                        // exists score
@@ -660,9 +663,9 @@ class AIActivity : AppCompatActivity(){
                                 val target = state.board[validMove.y][validMove.x]
                                 if (target != null) {
                                     if (target.role == Piece.PieceRole.KING) {
-                                        playerScore += 4                                            // threaten king
+                                        playerScore += 5                                            // threaten king
                                     } else {
-                                        playerScore++                                               // protecting or threaten
+                                        playerScore += 3                                              // protecting or threaten
                                     }
                                 }
                             }
@@ -675,7 +678,7 @@ class AIActivity : AppCompatActivity(){
                                 // lose by takeover
                                 return Int.MIN_VALUE
                             } else {
-                                opponentScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER2_BASE)) * 2  // distance to enemy base
+                                opponentScore += (7 - Point(j, i).distanceTo(GameEngine.PLAYER2_BASE)) * 3  // distance to enemy base
                             }
                         } else {
                             opponentScore += 5                                                      // exist score
@@ -686,9 +689,9 @@ class AIActivity : AppCompatActivity(){
                                 val target = state.board[validMove.y][validMove.x]
                                 if (target != null) {
                                     if (target.role == Piece.PieceRole.KING) {
-                                        opponentScore += 4                                            // threaten king
+                                        opponentScore += 5                                            // threaten king
                                     } else {
-                                        opponentScore++                                               // protecting or threaten
+                                        opponentScore += 3                                               // protecting or threaten
                                     }
                                 }
                             }
